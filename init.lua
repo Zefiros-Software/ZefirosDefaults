@@ -125,9 +125,12 @@ function zefiros.setDefaults( name, options )
 			}				
 		
 		files { 
-			name .. "/include/**.h",
-			name .. "/src/**.cpp",
+			name .. "/include/**.h"
 			}
+        
+        if options.headerOnly == nil or not options.headerOnly then
+            files( name .. "/src/**.cpp" )
+        end
     
     workspace()
 end
