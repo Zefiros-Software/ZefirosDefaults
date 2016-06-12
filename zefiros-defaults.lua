@@ -123,5 +123,6 @@ function zefiros.setDefaults( name )
 		files { 
 			name .. "/include/**.h"
 			}
+end
 
 return zefiros
