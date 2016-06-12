@@ -125,7 +125,8 @@ function zefiros.setDefaults( name, options )
 			}				
 		
 		files { 
-			name .. "/include/**.h"
+			name .. "/include/**.h",
+			name .. "/src/**.cpp",
 			}
     
     workspace()
