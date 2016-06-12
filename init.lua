@@ -26,6 +26,10 @@ zefiros = {}
 
 function zefiros.setDefaults( name, options )
 
+    if options == nil then
+        options = {}
+    end
+
     local config = { "Debug", "Release", "OptimisedDebug" }
     if options.configurations ~= nil then
         config = zpm.util.concat( config, options.configurations )
