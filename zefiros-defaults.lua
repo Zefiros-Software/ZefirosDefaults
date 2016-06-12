@@ -24,9 +24,13 @@
 
 zefiros = {}
 
-function zefiros.setDefaults( name )
+function zefiros.setDefaults( name, options )
 
     configurations { "Debug", "Release", "OptimisedDebug", "Coverage" }
+
+    if options.configurations ~= nil then
+        configurations( options.conditions )
+    end
 
     platforms { "x86_64", "x86" }
 
