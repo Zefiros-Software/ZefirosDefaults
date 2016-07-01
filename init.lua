@@ -26,11 +26,15 @@ zefiros = {}
 
 function zefiros.setDefaults( name, options )
 
-    configurations { "Debug", "Release", "OptimisedDebug", "Coverage" }
-
-    if options.configurations ~= nil then
-        configurations( options.conditions )
+    if options == nil then
+        options = {}
     end
+
+    local config = { "Debug", "Release", "OptimisedDebug" }
+    if options.configurations ~= nil then
+        config = zpm.util.concat( config, options.configurations )
+    end
+    configurations( config )
 
     platforms { "x86_64", "x86" }
 
@@ -128,6 +132,12 @@ function zefiros.setDefaults( name, options )
 		files { 
 			name .. "/include/**.h"
 			}
+        
+        if options.headerOnly == nil or not options.headerOnly then
+            files( name .. "/src/**.cpp" )
+        end
+    
+    workspace()
 end
 
 return zefiros
