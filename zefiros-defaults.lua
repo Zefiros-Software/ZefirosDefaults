@@ -73,6 +73,7 @@ function zefiros.setDefaults( name, options )
 
     filter "*Release"
         optimize "Speed"
+        defines "NDEBUG"
         
     filter "Coverage" 
         targetsuffix "cd"
