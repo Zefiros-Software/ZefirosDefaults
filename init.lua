@@ -31,12 +31,14 @@ function zefiros.setDefaults( name, options )
     end
 
     local config = { "Debug", "Release", "OptimisedDebug" }
+    local lconf = {}
     if options.headerOnly ~= nil and options.headerOnly then
 
         for _, c in ipairs( config ) do
-            config = zpm.util.concat( config, {string.format( "HeaderOnly%s", c )} )
+            config = zpm.util.concat( lconf, {string.format( "HeaderOnly%s", c )} )
         end
     end
+    config = zpm.util.concat( config, lconf )
     configurations( config )
 
     platforms { "x86_64", "x86" }
