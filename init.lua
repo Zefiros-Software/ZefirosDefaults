@@ -107,6 +107,11 @@ function zefiros.setDefaults( name, options )
 			"test/**.h",
 			"test/**.cpp"
 			}
+
+        excludes { 
+            "test/extern**",
+            "test/assets**"
+         }
             
         filter { "*Debug", "platforms:x86" }
             defines "PREFIX=X86D_"
