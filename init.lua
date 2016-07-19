@@ -35,7 +35,7 @@ function zefiros.setDefaults( name, options )
     if options.headerOnly ~= nil and options.headerOnly then
 
         for _, c in ipairs( config ) do
-            config = zpm.util.concat( lconf, {string.format( "HeaderOnly%s", c )} )
+            lconf = zpm.util.concat( lconf, {string.format( "HeaderOnly%s", c )} )
         end
     end
     config = zpm.util.concat( config, lconf )
