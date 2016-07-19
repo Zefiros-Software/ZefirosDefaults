@@ -112,8 +112,8 @@ function zefiros.setDefaults( name, options )
 			}
 
         excludes { 
-            "test/extern**",
-            "test/assets**"
+            "test/extern/**",
+            "test/assets/**"
          }
             
         filter { "*Debug", "platforms:x86" }
