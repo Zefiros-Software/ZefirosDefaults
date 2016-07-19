@@ -31,8 +31,11 @@ function zefiros.setDefaults( name, options )
     end
 
     local config = { "Debug", "Release", "OptimisedDebug" }
-    if options.configurations ~= nil then
-        config = zpm.util.concat( config, options.configurations )
+    if options.headerOnly ~= nil and options.headerOnly then
+
+        for _, c in ipairs( config ) do
+            config = zpm.util.concat( config, {string.format( "HeaderOnly%s", c )} )
+        end
     end
     configurations( config )
 
