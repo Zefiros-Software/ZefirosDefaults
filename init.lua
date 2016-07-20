@@ -86,7 +86,10 @@ function zefiros.setDefaults( name, options )
     filter "Coverage" 
         targetsuffix "cd"
         links "gcov"
-        buildoptions "-coverage"
+        buildoptions "-coverage" 
+    
+    filter "not HeaderOnly*"
+        defines( options.noHeaderOnlySwitch )
         
     zpm.buildLibraries()
 				
@@ -117,6 +120,9 @@ function zefiros.setDefaults( name, options )
             "test/extern/**",
             "test/assets/**"
          }
+                     
+        filter "not HeaderOnly*"
+            links( name )
             
         filter { "*Debug", "platforms:x86" }
             defines "PREFIX=X86D_"
@@ -129,6 +135,8 @@ function zefiros.setDefaults( name, options )
         
         filter { "*Release", "platforms:x86_64" }
             defines "PREFIX=X86_64R_"
+
+        filter {}
 			
 	project( name )
 		targetname( name )	 
@@ -137,14 +145,16 @@ function zefiros.setDefaults( name, options )
 		includedirs {
 			name .. "/include/"
 			}				
-		
-		files { 
-			name .. "/include/**.h"
-			}
-        
-        if options.headerOnly == nil or not options.headerOnly then
-            files( name .. "/src/**.cpp" )
-        end
+		     
+        files { 
+            name .. "/include/**.hpp",
+            name .. "/include/**.h"
+            }
+            
+        filter "not HeaderOnly*"                
+            files { 
+			    name .. "/src/**.cpp"
+                }
     
     workspace()
 end
