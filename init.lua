@@ -189,7 +189,7 @@ function zefiros.setTestZPMDefaults( name, options )
 				
 	filter {}
 			
-	project( name .. "-test" )
+	project( name .. "-zpm-test" )
 				
 		kind "ConsoleApp"
 		flags "WinMain"
