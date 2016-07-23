@@ -193,8 +193,6 @@ function zefiros.setTestZPMDefaults( name, options )
 				
 		kind "ConsoleApp"
 		flags "WinMain"
-		
-		location "test/"
         
         zpm.uses "Zefiros-Software/GoogleTest"
 		
