@@ -159,4 +159,60 @@ function zefiros.setDefaults( name, options )
     workspace()
 end
 
+function zefiros.setTestZPMDefaults( name, options )
+
+    if options == nil then
+        options = {}
+    end
+
+    configurations( { "Test" } )
+
+    platforms { "x86" }
+
+    startproject( name .. "-test" )
+	location( "zpm" )
+	objdir "bin/obj/"
+
+	warnings "Extra"
+	
+	flags {
+		"Unicode",
+		"C++11"
+	}
+    
+    filter "platforms:x86"
+        targetdir "bin/x86/"
+        debugdir "bin/x86/"
+        architecture "x86"
+        
+    zpm.buildLibraries()
+				
+	filter {}
+			
+	project( name .. "-test" )
+				
+		kind "ConsoleApp"
+		flags "WinMain"
+		
+		location "test/"
+        
+        zpm.uses "Zefiros-Software/GoogleTest"
+		
+		includedirs "./"
+		
+		files { 
+			"**.h",
+			"**.cpp"
+			}
+
+        excludes { 
+            "extern/**",
+            "assets/**"
+         }
+        
+        defines "PREFIX=ZPM_"
+    
+    workspace()
+end
+
 return zefiros
