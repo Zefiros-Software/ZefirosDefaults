@@ -91,6 +91,8 @@ function zefiros.setDefaults( name, options )
     
     filter "not HeaderOnly*"
         defines( options.noHeaderOnlySwitch )
+
+    filter {}
 			
 	project( name .. "-test" )
 				
@@ -152,6 +154,8 @@ function zefiros.setDefaults( name, options )
             files { 
 			    name .. "/src/**.cpp"
                 }
+
+        filter {}
     
     workspace()
 end
