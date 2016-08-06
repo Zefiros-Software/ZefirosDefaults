@@ -31,9 +31,14 @@ function zefiros.setDefaults( name, options )
     end
 
     local config = { "Debug", "Release", "OptimisedDebug" }
-    if options.configurations ~= nil then
-        config = zpm.util.concat( config, options.configurations )
+    local lconf = {}
+    if options.headerOnly ~= nil and options.headerOnly then
+
+        for _, c in ipairs( config ) do
+            lconf = zpm.util.concat( lconf, {string.format( "HeaderOnly%s", c )} )
+        end
     end
+    config = zpm.util.concat( config, lconf )
     configurations( config )
 
     platforms { "x86_64", "x86" }
@@ -82,7 +87,10 @@ function zefiros.setDefaults( name, options )
     filter "Coverage" 
         targetsuffix "cd"
         links "gcov"
-        buildoptions "-coverage"
+        buildoptions "-coverage" 
+    
+    filter "not HeaderOnly*"
+        defines( options.noHeaderOnlySwitch )
         
     zpm.buildLibraries()
 				
@@ -108,6 +116,14 @@ function zefiros.setDefaults( name, options )
 			"test/**.h",
 			"test/**.cpp"
 			}
+
+        excludes { 
+            "test/extern/**",
+            "test/assets/**"
+         }
+                     
+        filter "not HeaderOnly*"
+            links( name )
             
         filter { "*Debug", "platforms:x86" }
             defines "PREFIX=X86D_"
@@ -120,6 +136,8 @@ function zefiros.setDefaults( name, options )
         
         filter { "*Release", "platforms:x86_64" }
             defines "PREFIX=X86_64R_"
+
+        filter {}
 			
 	project( name )
 		targetname( name )	 
@@ -128,14 +146,70 @@ function zefiros.setDefaults( name, options )
 		includedirs {
 			name .. "/include/"
 			}				
+		     
+        files { 
+            name .. "/include/**.hpp",
+            name .. "/include/**.h"
+            }
+            
+        filter "not HeaderOnly*"                
+            files { 
+			    name .. "/src/**.cpp"
+                }
+    
+    workspace()
+end
+
+function zefiros.setTestZPMDefaults( name, options )
+
+    if options == nil then
+        options = {}
+    end
+
+    configurations( { "Test" } )
+
+    platforms { "x86" }
+
+    startproject( name .. "-test" )
+	location( "zpm" )
+	objdir "bin/obj/"
+
+	warnings "Extra"
+	
+	flags {
+		"Unicode",
+		"C++11"
+	}
+    
+    filter "platforms:x86"
+        targetdir "bin/x86/"
+        debugdir "bin/x86/"
+        architecture "x86"
+        
+    zpm.buildLibraries()
+				
+	filter {}
+			
+	project( name .. "-zpm-test" )
+				
+		kind "ConsoleApp"
+		flags "WinMain"
+        
+        zpm.uses "Zefiros-Software/GoogleTest"
+		
+		includedirs "./"
 		
 		files { 
-			name .. "/include/**.h"
+			"**.h",
+			"**.cpp"
 			}
+
+        excludes { 
+            "extern/**",
+            "assets/**"
+         }
         
-        if options.headerOnly == nil or not options.headerOnly then
-            files( name .. "/src/**.cpp" )
-        end
+        defines "PREFIX=ZPM_"
     
     workspace()
 end
