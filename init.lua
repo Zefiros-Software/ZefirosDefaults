@@ -166,7 +166,7 @@ function zefiros.setTestZPMDefaults( name, options )
 
     platforms { "x86" }
 
-    startproject( name .. "-test" )
+    startproject( name .. "-zpm-test" )
 	location( "zpm" )
 	objdir "bin/obj/"
 
