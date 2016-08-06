@@ -91,10 +91,6 @@ function zefiros.setDefaults( name, options )
     
     filter "not HeaderOnly*"
         defines( options.noHeaderOnlySwitch )
-        
-    zpm.buildLibraries()
-				
-	filter {}
 			
 	project( name .. "-test" )
 				
@@ -185,10 +181,6 @@ function zefiros.setTestZPMDefaults( name, options )
         targetdir "bin/x86/"
         debugdir "bin/x86/"
         architecture "x86"
-        
-    zpm.buildLibraries()
-				
-	filter {}
 			
 	project( name .. "-zpm-test" )
 				
