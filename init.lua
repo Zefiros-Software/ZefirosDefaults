@@ -30,6 +30,10 @@ function zefiros.setDefaults( name, options )
         options = {}
     end
 
+    if options.mayLink == nil then
+        options.mayLink = true
+    end
+
     local config = { "Debug", "Release", "OptimisedDebug" }
     local lconf = {}
     if options.headerOnly ~= nil and options.headerOnly then
@@ -121,7 +125,9 @@ function zefiros.setDefaults( name, options )
          }
                      
         filter "not HeaderOnly*"
-            links( name )
+            if options.mayLink then
+                links( name )
+            end
             
         filter { "*Debug", "platforms:x86" }
             defines "PREFIX=X86D_"
