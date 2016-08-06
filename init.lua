@@ -139,7 +139,6 @@ function zefiros.setDefaults( name, options )
 			
 	project( name )
 		targetname( name )	 
-		kind "StaticLib"
                 
 		includedirs {
 			name .. "/include/"
@@ -150,10 +149,14 @@ function zefiros.setDefaults( name, options )
             name .. "/include/**.h"
             }
             
-        filter "not HeaderOnly*"                
+        filter "not HeaderOnly*"    
+		    kind "StaticLib"            
             files { 
 			    name .. "/src/**.cpp"
                 }
+            
+        filter "HeaderOnly*"    
+		    kind "Utility"  
 
         filter {}
     
@@ -185,6 +188,8 @@ function zefiros.setTestZPMDefaults( name, options )
         targetdir "bin/x86/"
         debugdir "bin/x86/"
         architecture "x86"
+
+    filter {}
 			
 	project( name .. "-zpm-test" )
 				
