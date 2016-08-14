@@ -183,6 +183,8 @@ function zefiros.setTestZPMDefaults( name, options )
 	location( "zpm" )
 	objdir "bin/obj/"
 
+    optimize "Speed"
+    defines "NDEBUG"
 	warnings "Extra"
 	
 	flags {
