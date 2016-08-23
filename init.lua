@@ -92,6 +92,9 @@ function zefiros.setDefaults( name, options )
         targetsuffix "cd"
         links "gcov"
         buildoptions "-coverage" 
+
+        flags "Symbols"
+        optimize "Off"
     
     filter "not HeaderOnly*"
         defines( options.noHeaderOnlySwitch )
