@@ -96,8 +96,8 @@ function zefiros.setDefaults( name, options )
         flags "Symbols"
         optimize "Off"
     
-        objdir "!./"
-        targetdir "!./"
+        objdir "!."
+        targetdir "."
         
     filter "not HeaderOnly*"
         defines( options.noHeaderOnlySwitch )
