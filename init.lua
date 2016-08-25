@@ -87,7 +87,11 @@ function zefiros.setDefaults( name, options )
         targetsuffix "cd"
         links "gcov"
         buildoptions "-coverage"
-        
+
+        objdir "!./"
+        targetdir "!./"
+
+
     zpm.buildLibraries()
 				
 	filter {}
