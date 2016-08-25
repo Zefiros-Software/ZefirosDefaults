@@ -93,6 +93,9 @@ function zefiros.setDefaults( name, options )
         links "gcov"
         buildoptions "-coverage" 
 
+        flags "Symbols"
+        optimize "Off"
+    
         objdir "!./"
         targetdir "!./"
         
