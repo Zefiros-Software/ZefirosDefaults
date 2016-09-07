@@ -51,7 +51,7 @@ function zefiros.setDefaults( name, options )
 	location( name .. "/" )
 	objdir "bin/obj/"
 
-	vectorextensions "AVX"
+	vectorextensions "SSE"
 	warnings "Extra"
 	
 	flags {
