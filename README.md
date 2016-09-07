@@ -1,5 +1,5 @@
 # Zefiros Default Project Configuration
-This ZPM module defines the default project settings for [ZPM](zpm.zefiros.eu).
+This ZPM module defines the default project settings for [ZPM](https://zpm.zefiros.eu).
 
 # Adding New Repositories
 1. **Fork** it!

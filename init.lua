@@ -93,8 +93,11 @@ function zefiros.setDefaults( name, options )
         links "gcov"
         buildoptions "-coverage" 
 
-        objdir "!./"
-        targetdir "!./"
+        flags "Symbols"
+        optimize "Off"
+    
+        objdir "!."
+        targetdir "."
         
     filter "not HeaderOnly*"
         defines( options.noHeaderOnlySwitch )
@@ -170,6 +173,40 @@ function zefiros.setDefaults( name, options )
 		    kind "Utility"  
 
         filter {}
+
+    if os.isdir( "bench" ) then
+    
+        project( name .. "-bench" )
+                    
+            kind "ConsoleApp"
+            flags "WinMain"
+            
+            location "bench/"
+            
+            zpm.uses {
+                "Zefiros-Software/GoogleBenchmark"
+            }
+            
+            includedirs {			
+                name .. "/include/",
+                "bench/"
+                }	
+            
+            files { 
+                "bench/**.h",
+                "bench/**.cpp"
+                }
+
+            excludes { 
+                "bench/extern/**",
+                "bench/assets/**"
+            }
+                        
+            filter "not HeaderOnly*"
+                if options.mayLink then
+                    links( name )
+                end
+    end
     
     workspace()
 end
