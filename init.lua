@@ -173,7 +173,7 @@ function zefiros.setDefaults( name, options )
 		    kind "Utility"  
         
         filter { "HeaderOnly*", "action:xcode" }
-               type "StaticLib"
+            kind "StaticLib"
 
         filter {}
 
