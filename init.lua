@@ -169,8 +169,11 @@ function zefiros.setDefaults( name, options )
 			    name .. "/src/**.cpp"
                 }
             
-        filter "HeaderOnly*"    
+        filter { "HeaderOnly*", "action:not xcode4" }
 		    kind "Utility"  
+        
+        filter { "HeaderOnly*", "action:xcode4" }
+               type "StaticLib"
 
         filter {}
 
