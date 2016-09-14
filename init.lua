@@ -170,12 +170,11 @@ function zefiros.setDefaults( name, options )
                 }
             
         filter "HeaderOnly*"
-		    kind "Utility"  
-        
-        filter { "HeaderOnly*", "action:xcode" }
-            kind "StaticLib"
-
-        filter {}
+ 		kind "Utility"  
+        	
+		if _ACTION == "xcode4" then
+			kind "StaticLib"
+		end
 
     if os.isdir( "bench" ) then
     
