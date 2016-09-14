@@ -169,7 +169,7 @@ function zefiros.setDefaults( name, options )
 			    name .. "/src/**.cpp"
                 }
             
-        filter { "HeaderOnly*", "action:not xcode" }
+        filter "HeaderOnly*"
 		    kind "Utility"  
         
         filter { "HeaderOnly*", "action:xcode" }
