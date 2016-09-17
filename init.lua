@@ -152,7 +152,8 @@ function zefiros.setDefaults( name, options )
         filter {}
 			
 	project( name )
-		targetname( name )	 
+		targetname( name )
+        kind "StaticLib"     
                 
 		includedirs {
 			name .. "/include/"
@@ -163,22 +164,10 @@ function zefiros.setDefaults( name, options )
             name .. "/include/**.h"
             }
             
-        filter "not HeaderOnly*"    
-		    kind "StaticLib"            
+        filter "not HeaderOnly*"           
             files { 
 			    name .. "/src/**.cpp"
                 }
-            
-        filter { "HeaderOnly*", "platforms:Windows" }
-        	kind "Utility"
-
-    	filter { "HeaderOnly*", "platforms:Unix" }
-        	kind "StaticLib"
-
-    	filter { "HeaderOnly*", "platforms:Mac" }
-        	kind "StaticLib"
-
-    	filter {}
 
 
 
