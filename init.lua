@@ -76,7 +76,7 @@ function zefiros.setDefaults( name, options )
         targetsuffix "d"
         defines "DEBUG"
 
-        flags "Symbols"
+        symbols "On"
         optimize "Off"
         
     filter "*OptimisedDebug"
@@ -93,7 +93,7 @@ function zefiros.setDefaults( name, options )
         links "gcov"
         buildoptions "-coverage" 
 
-        flags "Symbols"
+        symbols "On"
         optimize "Off"
     
         objdir "!."
