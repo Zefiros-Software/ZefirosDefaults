@@ -84,8 +84,9 @@ function zefiros.setDefaults( name, options )
         flags "LinkTimeOptimization"
         optimize "Speed"
 
-    filter "*Release"
+    filter "*Release"        
         optimize "Speed"
+        flags "LinkTimeOptimization"
         defines "NDEBUG"
         
     filter "Coverage" 
