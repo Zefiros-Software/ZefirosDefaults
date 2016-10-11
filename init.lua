@@ -53,6 +53,7 @@ function zefiros.setDefaults( name, options )
 
 	vectorextensions "SSE"
 	warnings "Extra"
+    linkgroups "On"
 	
 	flags {
 		"Unicode",
@@ -232,6 +233,7 @@ function zefiros.setTestZPMDefaults( name, options )
     optimize "Speed"
     defines "NDEBUG"
 	warnings "Extra"
+    linkgroups "On"
 	
 	flags {
 		"Unicode",
