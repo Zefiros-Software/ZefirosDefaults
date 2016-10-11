@@ -160,6 +160,12 @@ function zefiros.setDefaults( name, options )
             name .. "/include/**.hpp",
             name .. "/include/**.h"
             }
+
+        if options.mayLink == false then
+            files {
+                "extern/dummy.cpp"
+            }
+        end
             
         filter "not HeaderOnly*"           
             files { 
