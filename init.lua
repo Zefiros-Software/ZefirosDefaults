@@ -53,10 +53,12 @@ function zefiros.setDefaults( name, options )
 
 	vectorextensions "SSE"
 	warnings "Extra"	
-    linkgroups "On"
     characterset "Unicode"
 
 	flags "C++11"
+
+    filter "system:not macosx"
+        linkgroups "On"
 
     filter "system:not windows"
         configurations { "Coverage" }
@@ -229,11 +231,13 @@ function zefiros.setTestZPMDefaults( name, options )
     optimize "Speed"
     defines "NDEBUG"
 	warnings "Extra"
-    linkgroups "On"
     characterset "Unicode"
 	
 	flags "C++11"
     
+    filter "system:not macosx"
+        linkgroups "On"
+
     filter "platforms:x86"
         targetdir "bin/x86/"
         debugdir "bin/x86/"
