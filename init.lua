@@ -84,13 +84,18 @@ function zefiros.setDefaults( name, options )
         
     filter "*OptimisedDebug"
         targetsuffix "od"
-        --flags "LinkTimeOptimization"
+        flags "LinkTimeOptimization"
         optimize "Speed"
 
     filter "*Release"        
         optimize "Speed"
-        --flags "LinkTimeOptimization"
         defines "NDEBUG"
+
+    filter { "*Release", "system:not linux" }
+        flags "LinkTimeOptimization"
+
+    filter { "*OptimisedDebug", "system:not linux" }
+        flags "LinkTimeOptimization"
         
     filter "Coverage" 
         targetsuffix "cd"
