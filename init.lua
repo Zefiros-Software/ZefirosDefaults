@@ -52,12 +52,10 @@ function zefiros.setDefaults( name, options )
 	objdir "bin/obj/"
 
 	vectorextensions "SSE"
-	warnings "Extra"
-	
-	flags {
-		"Unicode",
-		"C++11"
-	}
+	warnings "Extra"	
+    characterset "Unicode"
+
+	flags "C++11"
 
     filter "system:not macosx"
         linkgroups "On"
@@ -78,8 +76,7 @@ function zefiros.setDefaults( name, options )
     filter "*Debug"
         targetsuffix "d"
         defines "DEBUG"
-
-        flags { "Symbols" }
+        symbols "On"
         optimize "Off"
         
     filter "*OptimisedDebug"
@@ -101,8 +98,7 @@ function zefiros.setDefaults( name, options )
         targetsuffix "cd"
         links "gcov"
         buildoptions "-coverage" 
-
-        flags { "Symbols" }
+        symbols "On"
         optimize "Off"
     
         objdir "!."
@@ -240,11 +236,9 @@ function zefiros.setTestZPMDefaults( name, options )
     optimize "Speed"
     defines "NDEBUG"
 	warnings "Extra"
+    characterset "Unicode"
 	
-	flags {
-		"Unicode",
-		"C++11"
-	}
+	flags "C++11"
     
     filter "system:not macosx"
         linkgroups "On"
