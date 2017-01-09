@@ -240,8 +240,8 @@ function zefiros.setTestZPMDefaults( name, options )
 	
 	flags "C++11"
     
-    filter "system:not macosx"
-        linkgroups "On"
+    --filter "system:not macosx"
+    --    linkgroups "On"
 
     filter "platforms:x86"
         targetdir "bin/x86/"
