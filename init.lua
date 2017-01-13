@@ -26,6 +26,8 @@ zefiros = {}
 
 function zefiros.setDefaults( name, options )
 
+    local licenseheader = name .. "/" .. name .. ".licenseheader"    
+
     if options == nil then
         options = {}
     end
@@ -110,6 +112,10 @@ function zefiros.setDefaults( name, options )
 
 
     filter {}
+
+    if os.isfile( licenseheader ) and os.isdir( "test" ) then
+        os.copyfile( licenseheader, "test/" .. name .. ".licenseheader" )
+    end 
 			
 	project( name .. "-test" )
 				
@@ -129,7 +135,8 @@ function zefiros.setDefaults( name, options )
 		
 		files { 
 			"test/**.h",
-			"test/**.cpp"
+			"test/**.cpp",
+            "test/**.licenseheader"
 			}
 
         excludes { 
@@ -166,7 +173,8 @@ function zefiros.setDefaults( name, options )
 		     
         files { 
             name .. "/include/**.hpp",
-            name .. "/include/**.h"
+            name .. "/include/**.h",
+            name .. "/**.licenseheader"
             }
 
         if options.mayLink == false then
@@ -183,6 +191,10 @@ function zefiros.setDefaults( name, options )
 
 
     if os.isdir( "bench" ) then
+
+        if os.isfile( licenseheader ) then
+            os.copyfile( licenseheader, "bench/" .. name .. ".licenseheader" )
+        end
     
         project( name .. "-bench" )
                     
@@ -202,7 +214,8 @@ function zefiros.setDefaults( name, options )
             
             files { 
                 "bench/**.h",
-                "bench/**.cpp"
+                "bench/**.cpp",
+                "bench/**.licenseheader"
                 }
 
             excludes { 
