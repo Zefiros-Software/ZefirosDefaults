@@ -188,6 +188,8 @@ function zefiros.setDefaults( name, options )
 			    name .. "/src/**.cpp"
                 }
 
+        filter {}
+
 
 
     if os.isdir( "bench" ) then
@@ -227,6 +229,8 @@ function zefiros.setDefaults( name, options )
                 if options.mayLink then
                     links( name )
                 end
+            
+            filter {}
     end
     
     workspace()
