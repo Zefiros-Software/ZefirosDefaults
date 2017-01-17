@@ -160,6 +160,12 @@ function zefiros.setDefaults( name, options )
         
         filter { "*Release", "platforms:x86_64" }
             defines "PREFIX=X86_64R_"
+        
+        filter { "*Coverage", "platforms:x86" }
+            defines "PREFIX=X86C_"
+        
+        filter { "*Coverage", "platforms:x86_64" }
+            defines "PREFIX=X86_64C_"
 
         filter {}
 			
