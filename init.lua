@@ -36,7 +36,7 @@ function zefiros.setDefaults( name, options )
         options.mayLink = true
     end
 
-    local config = { "Debug", "Release", "OptimisedDebug" }
+    local config = { "Release", "Debug", "OptimisedDebug" }
     local lconf = {}
     if options.headerOnly ~= nil and options.headerOnly then
 
