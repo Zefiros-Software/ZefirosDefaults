@@ -53,11 +53,8 @@ function zefiros.setDefaults( name, options )
 	location( name .. "/" )
 	objdir "bin/obj/"
 
-	vectorextensions "SSE"
-	warnings "Extra"	
-    characterset "Unicode"
-
-	flags "C++11"
+	vectorextensions "SSE2"
+	warnings "Extra"
 
     filter "system:not macosx"
         linkgroups "On"
