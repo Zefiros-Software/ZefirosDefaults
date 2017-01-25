@@ -256,9 +256,6 @@ function zefiros.setTestZPMDefaults( name, options )
     optimize "Speed"
     defines "NDEBUG"
 	warnings "Extra"
-    characterset "Unicode"
-	
-	flags "C++11"
     
     --filter "system:not macosx"
     --    linkgroups "On"
