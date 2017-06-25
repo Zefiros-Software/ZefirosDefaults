@@ -1,5 +1,6 @@
-libraries:
-  - name: Zefiros-Software/GoogleTest
-    version: '@head || ^1.0.0'
-  - name: Zefiros-Software/GoogleBenchmark
-    version: '@head'
+public:
+  libraries:
+    - name: Zefiros-Software/GoogleTest
+      version: '@head || ^1.0.0'
+    - name: Zefiros-Software/GoogleBenchmark
+      version: '@head'
