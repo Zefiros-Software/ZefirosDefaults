@@ -48,9 +48,8 @@ function zefiros.setDefaults( name, options )
     configurations( config )
 
     platforms { "x86_64", "x86" }
-
     startproject( name .. "-test" )
-	location( name .. "/" )
+	location( name )
 	objdir "bin/obj/"
 
 	vectorextensions "SSE2"
@@ -60,7 +59,7 @@ function zefiros.setDefaults( name, options )
         linkgroups "On"
 
     filter "system:not windows"
-        configurations { "Coverage" }
+        configurations "Coverage"
     
     filter "platforms:x86"
         targetdir "bin/x86/"
@@ -106,19 +105,15 @@ function zefiros.setDefaults( name, options )
     filter "not HeaderOnly*"
         defines( options.noHeaderOnlySwitch )
 
-
-
     filter {}
 
     if os.isfile( licenseheader ) and os.isdir( "test" ) then
-        os.copyfile( licenseheader, "test/" .. name .. ".licenseheader" )
+        os.copyfile( licenseheader, path.join("test", name .. ".licenseheader") )
     end 
 			
 	project( name .. "-test" )
 				
-		kind "ConsoleApp"
-		flags "WinMain"
-		
+		kind "ConsoleApp"		
 		location "test/"
         
         zpm.uses {
@@ -164,6 +159,9 @@ function zefiros.setDefaults( name, options )
         filter { "*Coverage", "platforms:x86_64" }
             defines "PREFIX=X86_64C_"
 
+        filter { "not *Coverage and not *Release and not *Debug" }
+            defines "PREFIX=X_"
+
         filter {}
 			
 	project( name )
@@ -180,7 +178,7 @@ function zefiros.setDefaults( name, options )
             name .. "/**.licenseheader"
             }
 
-        if options.mayLink == false then
+        if not options.mayLink then
             files {
                 "extern/dummy.cpp"
             }
@@ -194,19 +192,16 @@ function zefiros.setDefaults( name, options )
         filter {}
 
 
-
     if os.isdir( "bench" ) then
 
         if os.isfile( licenseheader ) then
-            os.copyfile( licenseheader, "bench/" .. name .. ".licenseheader" )
+            os.copyfile( licenseheader, path.join("bench", name .. ".licenseheader") )
         end
     
         project( name .. "-bench" )
                     
-            kind "ConsoleApp"
-            flags "WinMain"
-            
-            location "bench/"
+            kind "ConsoleApp"            
+            location "bench"
             
             zpm.uses {
                 "Zefiros-Software/GoogleBenchmark"
