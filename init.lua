@@ -36,7 +36,7 @@ function zefiros.setDefaults( name, options )
         options.mayLink = true
     end
 
-    local config = { "Release", "Debug", "OptimisedDebug" }
+    local config = { "Release", "Debug", "OptDebug" }
     local lconf = {}
     if options.headerOnly ~= nil and options.headerOnly then
 
@@ -77,7 +77,7 @@ function zefiros.setDefaults( name, options )
         symbols "On"
         optimize "Off"
         
-    filter "*OptimisedDebug"
+    filter "*OptDebug"
         targetsuffix "od"
         flags "LinkTimeOptimization"
         optimize "Speed"
@@ -89,7 +89,7 @@ function zefiros.setDefaults( name, options )
     filter { "*Release", "system:not linux" }
         flags "LinkTimeOptimization"
 
-    filter { "*OptimisedDebug", "system:not linux" }
+    filter { "*OptDebug", "system:not linux" }
         flags "LinkTimeOptimization"
         
     filter "Coverage" 
@@ -240,16 +240,15 @@ function zefiros.setTestZPMDefaults( name, options )
         options = {}
     end
 
-    configurations( { "Test" } )
+    configurations { "Test" }
 
     platforms { "x86" }
 
     startproject( name .. "-zpm-test" )
-	location( "zpm" )
+	location "zpm"
 	objdir "bin/obj/"
 
     optimize "Speed"
-    defines "NDEBUG"
 	warnings "Extra"
     
     --filter "system:not macosx"
@@ -265,7 +264,6 @@ function zefiros.setTestZPMDefaults( name, options )
 	project( name .. "-zpm-test" )
 				
 		kind "ConsoleApp"
-		flags "WinMain"
         
         zpm.uses "Zefiros-Software/GoogleTest"
 		
