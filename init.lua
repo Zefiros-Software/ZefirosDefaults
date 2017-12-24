@@ -28,7 +28,7 @@ function zefiros.setDefaults( name, options )
 
     local licenseheader = name .. "/" .. name .. ".licenseheader"    
 
-    if options == nil then
+    if not options then
         options = {}
     end
 
