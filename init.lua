@@ -22,10 +22,13 @@
 -- @endcond
 --]]
 
-zefiros = {}
+zefiros = {
+    name = nil
+}
 
 function zefiros.setDefaults( name, options )
 
+    zefiros.name = name
     local licenseheader = name .. "/" .. name .. ".licenseheader"    
 
     if not options then
@@ -283,5 +286,29 @@ function zefiros.setTestZPMDefaults( name, options )
     
     workspace()
 end
+
+zpm.newaction {
+    trigger = "build-ci",
+    description = "Build this library with a default structure",
+    execute = function()
+
+        local current = os.getcwd()
+    
+        os.chdir(path.join(_MAIN_SCRIPT_DIR, "test"))
+
+        if os.hostis("windows") then
+
+            local vs = iif(os.getenv("TYPE") == "zpm", "vs2015", iif(os.getenv("VSTUD"), os.getenv("VSTUD"), "vs2015"))
+    
+            os.executef("zpmd %s --skip-lock", vs)
+            os.executef("msbuild zpm/%s-ZPM.sln", _ARGS[1])
+            os.executef("bin/%s/%s-zpm-test.exe", iif(os.getenv("ARCH"), os.getenv("ARCH"), "x86"), _ARGS[2])
+        else
+
+        end
+        os.chdir(current)
+
+    end
+}
 
 return zefiros
