@@ -309,7 +309,7 @@ zpm.newaction {
                 os.chdir(current)
             else
                 
-                os.executef("zpm %s --skip-lock", vs)   
+                os.executef("zpm %s --skip-lock --verbose", vs)   
                 
                 os.executef("msbuild plot/%s.sln /property:Configuration=Release /property:Platform=%s", _ARGS[1], iif(os.getenv("PLAT"), os.getenv("PLAT"), "x64"))
             end
