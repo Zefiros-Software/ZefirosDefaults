@@ -4,7 +4,3 @@ public:
       version: '@head || ^1.0.0'
     - name: Zefiros-Software/GoogleBenchmark
       version: '@head'
-settings:
-  installCI:
-    default: false
-    reduce: allTrue
