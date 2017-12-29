@@ -340,7 +340,6 @@ zpm.newaction {
                 os.chdir(current)
             end
         end
-
     end
 }
 
@@ -367,14 +366,13 @@ zpm.newaction {
             else
                 if os.getenv("TYPE") == "debug" then
                     os.executef("bin/%s/%s-testd", iif(os.getenv("ARCH"), os.getenv("ARCH"), "x86"), _ARGS[2])    
-                else if os.getenv("TYPE") == "coverage" then
+                elseif os.getenv("TYPE") == "coverage" then
                     os.executef("%s-testcd", _ARGS[2])     
                 else
                     os.executef("bin/%s/%s-test", iif(os.getenv("ARCH"), os.getenv("ARCH"), "x86"), _ARGS[2])     
                 end
             end
         end
-
     end
 }
 
