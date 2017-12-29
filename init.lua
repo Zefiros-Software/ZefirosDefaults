@@ -302,16 +302,16 @@ zpm.newaction {
             
                 os.chdir(path.join(_MAIN_SCRIPT_DIR, "test"))
 
-                os.executef("zpm %s --skip-lock", vs)   
+                os.fexecutef("zpm %s --skip-lock", vs)   
 
-                os.executef("msbuild zpm/%s-ZPM.sln", _ARGS[1])
+                os.fexecutef("msbuild zpm/%s-ZPM.sln", _ARGS[1])
 
                 os.chdir(current)
             else
                 
-                os.executef("zpm %s --skip-lock", vs)   
+                os.fexecutef("zpm %s --skip-lock", vs)   
                 
-                os.executef("msbuild plot/%s.sln /property:Configuration=Release /property:Platform=%s", _ARGS[1], iif(os.getenv("PLAT"), os.getenv("PLAT"), "x64"))
+                os.fexecutef("msbuild plot/%s.sln /property:Configuration=Release /property:Platform=%s", _ARGS[1], iif(os.getenv("PLAT"), os.getenv("PLAT"), "x64"))
             end
         else
             if os.getenv("TYPE") == "zpm" then
@@ -320,22 +320,22 @@ zpm.newaction {
             
                 os.chdir(path.join(_MAIN_SCRIPT_DIR, "test"))
 
-                os.executef("zpm gmake --skip-lock")   
+                os.fexecutef("zpm gmake --skip-lock")   
             
                 os.chdir(path.join(_MAIN_SCRIPT_DIR, "test/zpm"))
 
-                os.executef("make")
+                os.fexecutef("make")
 
                 os.chdir(current)
             else
                 
 
-                os.executef("zpmd gmake --skip-lock")   
+                os.fexecutef("zpmd gmake --skip-lock")   
                 
                 local current = os.getcwd()
                 os.chdir(path.join(_MAIN_SCRIPT_DIR, "test", _ARGS[2]))
 
-                os.executef("make config=%s_%s", os.getenv("TYPE"), os.getenv("ARCH"))
+                os.fexecutef("make config=%s_%s", os.getenv("TYPE"), os.getenv("ARCH"))
 
                 os.chdir(current)
             end
@@ -351,12 +351,12 @@ zpm.newaction {
         if os.ishost("windows") then       
             
             if os.getenv("TYPE") == "zpm" then
-                os.executef("zpm\\bin\\%s\\%s-zpm-test.exe", iif(os.getenv("ARCH"), os.getenv("ARCH"), "x86"), _ARGS[2])     
+                os.fexecutef("zpm\\bin\\%s\\%s-zpm-test.exe", iif(os.getenv("ARCH"), os.getenv("ARCH"), "x86"), _ARGS[2])     
             else
                 if os.getenv("TYPE") == "debug" then
-                    os.executef("bin\\%s\\%s-testd.exe", iif(os.getenv("ARCH"), os.getenv("ARCH"), "x86"), _ARGS[2])     
+                    os.fexecutef("bin\\%s\\%s-testd.exe", iif(os.getenv("ARCH"), os.getenv("ARCH"), "x86"), _ARGS[2])     
                 else
-                    os.executef("bin\\%s\\%s-test.exe", iif(os.getenv("ARCH"), os.getenv("ARCH"), "x86"), _ARGS[2])     
+                    os.fexecutef("bin\\%s\\%s-test.exe", iif(os.getenv("ARCH"), os.getenv("ARCH"), "x86"), _ARGS[2])     
                 end
             end
         else
