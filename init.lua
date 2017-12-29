@@ -333,7 +333,7 @@ zpm.newaction {
                 os.executef("zpmd gmake --skip-lock --verbose")   
                 
                 local current = os.getcwd()
-                os.chdir(path.join(_MAIN_SCRIPT_DIR, "test", _ARGS[2]))
+                os.chdir(path.join(_MAIN_SCRIPT_DIR, _ARGS[2]))
 
                 os.fexecutef("make config=%s_%s", os.getenv("TYPE"), os.getenv("ARCH"))
 
