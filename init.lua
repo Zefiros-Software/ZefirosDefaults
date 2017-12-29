@@ -330,7 +330,7 @@ zpm.newaction {
             else
                 
 
-                os.executef("zpm gmake --skip-lock")   
+                os.executef("zpm gmake --skip-lock --verbose")   
                 
                 local current = os.getcwd()
                 os.chdir(path.join(_MAIN_SCRIPT_DIR, _ARGS[2]))
