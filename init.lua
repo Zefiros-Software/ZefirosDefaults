@@ -302,7 +302,7 @@ zpm.newaction {
             
                 os.chdir(path.join(_MAIN_SCRIPT_DIR, "test"))
 
-                os.executef("zpm %s --skip-lock", vs)   
+                os.executef("zpm %s --skip-lock --verbose", vs)   
 
                 os.executef("msbuild zpm/%s-ZPM.sln", _ARGS[1])
 
