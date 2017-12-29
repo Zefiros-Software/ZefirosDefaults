@@ -388,12 +388,12 @@ function zefiros.onLoad()
             os.execute("sudo add-apt-repository ppa:ubuntu-toolchain-r/test -y")
             os.execute("sudo apt-get update -y")
         
-            os.execute("sudo apt-get install gcc-%s g++-%s -y", version, version)
-            os.execute("sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-%s 60", version)
-            os.execute("sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-%s 60", version)
-            os.execute("sudo update-alternatives --config gcc")
-            os.execute("sudo update-alternatives --config g++")
-            os.execute("sudo apt-get install gcc-%s-multilib g++-%s-multilib", version, version)
+            os.executef("sudo apt-get install gcc-%s g++-%s -y", version, version)
+            os.executef("sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-%s 60", version)
+            os.executef("sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-%s 60", version)
+            os.executef("sudo update-alternatives --config gcc")
+            os.executef("sudo update-alternatives --config g++")
+            os.executef("sudo apt-get install gcc-%s-multilib g++-%s-multilib", version, version)
         
             -- for coverage
             os.execute("sudo pip install codecov")
