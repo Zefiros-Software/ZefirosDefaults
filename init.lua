@@ -302,14 +302,14 @@ zpm.newaction {
             
                 os.chdir(path.join(_MAIN_SCRIPT_DIR, "test"))
 
-                os.fexecutef("zpm %s --skip-lock", vs)   
+                os.executef("zpm %s --skip-lock", vs)   
 
                 os.fexecutef("msbuild zpm/%s-ZPM.sln", _ARGS[1])
 
                 os.chdir(current)
             else
                 
-                os.fexecutef("zpm %s --skip-lock", vs)   
+                os.executef("zpm %s --skip-lock", vs)   
                 
                 os.fexecutef("msbuild plot/%s.sln /property:Configuration=Release /property:Platform=%s", _ARGS[1], iif(os.getenv("PLAT"), os.getenv("PLAT"), "x64"))
             end
@@ -320,7 +320,7 @@ zpm.newaction {
             
                 os.chdir(path.join(_MAIN_SCRIPT_DIR, "test"))
 
-                os.fexecutef("zpm gmake --skip-lock")   
+                os.executef("zpm gmake --skip-lock")   
             
                 os.chdir(path.join(_MAIN_SCRIPT_DIR, "test/zpm"))
 
@@ -330,7 +330,7 @@ zpm.newaction {
             else
                 
 
-                os.fexecutef("zpmd gmake --skip-lock --verbose")   
+                os.executef("zpmd gmake --skip-lock --verbose")   
                 
                 local current = os.getcwd()
                 os.chdir(path.join(_MAIN_SCRIPT_DIR, "test", _ARGS[2]))
