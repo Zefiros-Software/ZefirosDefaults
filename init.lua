@@ -377,7 +377,7 @@ zpm.newaction {
 }
 
 function zefiros.onLoad()
-    if os.getenv("travis") then
+    if os.getenv("TRAVIS") then
 
         local gccVersion = os.getenv("GCC_VERSION")
         if not gccVersion then
