@@ -351,7 +351,7 @@ zpm.newaction {
         if os.ishost("windows") then       
             
             if os.getenv("TYPE") == "zpm" then
-                os.fexecutef("zpm\\bin\\%s\\%s-zpm-test.exe", iif(os.getenv("ARCH"), os.getenv("ARCH"), "x86"), _ARGS[2])     
+                os.fexecutef("test\\bin\\%s\\%s-zpm-test.exe", iif(os.getenv("ARCH"), os.getenv("ARCH"), "x86"), _ARGS[2])     
             else
                 if os.getenv("TYPE") == "debug" then
                     os.fexecutef("bin\\%s\\%s-testd.exe", iif(os.getenv("ARCH"), os.getenv("ARCH"), "x86"), _ARGS[2])     
@@ -362,7 +362,7 @@ zpm.newaction {
         else
             
             if os.getenv("TYPE") == "zpm" then
-                os.executef("zpm/bin/%s/%s-zpm-test", iif(os.getenv("ARCH"), os.getenv("ARCH"), "x86"), _ARGS[2])     
+                os.executef("test/bin/%s/%s-zpm-test", iif(os.getenv("ARCH"), os.getenv("ARCH"), "x86"), _ARGS[2])     
             else
                 if os.getenv("TYPE") == "debug" then
                     os.executef("bin/%s/%s-testd", iif(os.getenv("ARCH"), os.getenv("ARCH"), "x86"), _ARGS[2])    
