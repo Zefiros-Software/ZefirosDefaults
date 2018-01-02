@@ -377,6 +377,7 @@ zpm.newaction {
 }
 
 function zefiros.onLoad()
+
     if os.getenv("TRAVIS") then
 
         local gccVersion = os.getenv("GCC_VERSION")
@@ -384,7 +385,8 @@ function zefiros.onLoad()
             gccVersion = "6"
         end
 
-        if os.ishost("linux") then 
+        if os.ishost("linux") and not zpm.loader.config(('install.module.zefiros-software.miniconda.gcc-%s'):format(gccVersion)) then 
+            zpm.loader.config:set(('install.module.zefiros-software.miniconda.gcc-%s'):format(gccVersion), "installed")
             os.execute("sudo add-apt-repository ppa:ubuntu-toolchain-r/test -y")
             os.execute("sudo apt-get update -y")
         
