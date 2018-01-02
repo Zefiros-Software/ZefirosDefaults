@@ -26,6 +26,20 @@ zefiros = {
     name = nil
 }
 
+function zefiros.testDefinition(name)
+
+    configurations { "Test" }
+
+    project(name)
+
+    kind "ConsoleApp"
+    files "test*.cpp"
+
+    zpm.uses "Zefiros-Software/GoogleTest"
+
+    workspace()
+end
+
 function zefiros.setDefaults( name, options )
 
     zefiros.name = name
@@ -339,6 +353,27 @@ zpm.newaction {
 
                 os.chdir(current)
             end
+        end
+    end
+}
+
+zpm.newaction {
+    trigger = "test-definition",
+    description = "Test this definition with a default structure",
+    execute = function()
+
+        if os.ishost("windows") then
+            
+            os.executef("zpm vs2015 --skip-lock --verbose")   
+
+            os.fexecutef("msbuild %s.sln /property:Configuration=Test /property:Platform=Win32", _ARGS[1])
+            os.fexecutef("bin\\Test\\%s.exe", _ARGS[1])
+        else
+
+            os.executef("zpm gmake --skip-lock --verbose")   
+
+            os.fexecutef("make")
+            os.fexecutef("/bin/Test/%s", _ARGS[1])
         end
     end
 }
