@@ -304,14 +304,14 @@ zpm.newaction {
 
                 os.executef("zpm %s --skip-lock --verbose", vs)   
 
-                os.executef("msbuild zpm/%s-ZPM.sln", _ARGS[1])
+                os.fexecutef("msbuild zpm/%s-ZPM.sln", _ARGS[1])
 
                 os.chdir(current)
             else
                 
                 os.executef("zpm %s --skip-lock --verbose", vs)   
                 
-                os.executef("msbuild plot/%s.sln /property:Configuration=%s /property:Platform=%s", _ARGS[1], os.getenv("TYPE"), iif(os.getenv("PLAT"), os.getenv("PLAT"), "x64"))
+                os.fexecutef("msbuild plot/%s.sln /property:Configuration=%s /property:Platform=%s", _ARGS[1], os.getenv("TYPE"), iif(os.getenv("PLAT"), os.getenv("PLAT"), "x64"))
             end
         else
             if os.getenv("TYPE") == "zpm" then
@@ -324,7 +324,7 @@ zpm.newaction {
             
                 os.chdir(path.join(_MAIN_SCRIPT_DIR, "test/zpm"))
 
-                os.executef("make")
+                os.fexecutef("make")
 
                 os.chdir(current)
             else
@@ -335,7 +335,7 @@ zpm.newaction {
                 local current = os.getcwd()
                 os.chdir(path.join(_MAIN_SCRIPT_DIR, _ARGS[2]))
 
-                os.executef("make config=%s_%s", os.getenv("TYPE"), os.getenv("ARCH"))
+                os.fexecutef("make config=%s_%s", os.getenv("TYPE"), os.getenv("ARCH"))
 
                 os.chdir(current)
             end
@@ -348,8 +348,8 @@ zpm.newaction {
     description = "Build this library with a default structure",
     execute = function()
 
-        os.executef("zpm run build-ci --verbose --skip-lock %s %s", _ARGS[1], _ARGS[2])
-        os.executef("zpm run test-ci --verbose --skip-lock %s %s", _ARGS[1], _ARGS[2])
+        os.fexecutef("zpm run build-ci --verbose --skip-lock %s %s", _ARGS[1], _ARGS[2])
+        os.fexecutef("zpm run test-ci --verbose --skip-lock %s %s", _ARGS[1], _ARGS[2])
 
     end
 }
@@ -359,8 +359,8 @@ zpm.newaction {
     description = "Build this library with a default structure",
     execute = function()
 
-        os.executef("zpm run build-ci --verbose %s %s", _ARGS[1], _ARGS[2])
-        os.executef("zpm run test-ci --verbose %s %s", _ARGS[1], _ARGS[2])
+        os.fexecutef("zpm run build-ci --verbose %s %s", _ARGS[1], _ARGS[2])
+        os.fexecutef("zpm run test-ci --verbose %s %s", _ARGS[1], _ARGS[2])
 
     end
 }
