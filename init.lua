@@ -325,7 +325,7 @@ zpm.newaction {
                 
                 os.executef("zpm %s --skip-lock --verbose", vs)   
                 
-                os.fexecutef("msbuild plot/%s.sln /property:Configuration=%s /property:Platform=%s", _ARGS[1], os.getenv("TYPE"), iif(os.getenv("PLAT"), os.getenv("PLAT"), "x64"))
+                os.fexecutef("msbuild %/%s.sln /property:Configuration=%s /property:Platform=%s", _ARGS[2], _ARGS[1], os.getenv("TYPE"), iif(os.getenv("PLAT"), os.getenv("PLAT"), "x64"))
             end
         else
             if os.getenv("TYPE") == "zpm" then
