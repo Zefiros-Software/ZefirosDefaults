@@ -373,7 +373,7 @@ zpm.newaction {
             os.executef("zpm gmake --skip-lock --verbose")   
 
             os.fexecutef("make")
-            os.fexecutef("/bin/Test/%s", _ARGS[1])
+            os.fexecutef("./bin/Test/%s", _ARGS[1])
         end
     end
 }
