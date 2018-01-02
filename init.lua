@@ -384,7 +384,7 @@ zpm.newaction {
     execute = function()
 
         os.fexecutef("zpm run build-ci --verbose --skip-lock %s %s", _ARGS[1], _ARGS[2])
-        os.fexecutef("zpm run test-ci --verbose --skip-lock %s %s", _ARGS[1], _ARGS[2])
+        os.fexecutef("zpm run test-ci --verbose %s %s", _ARGS[1], _ARGS[2])
 
     end
 }
