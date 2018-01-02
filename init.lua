@@ -344,6 +344,28 @@ zpm.newaction {
 }
 
 zpm.newaction {
+    trigger = "build-ci-library",
+    description = "Build this library with a default structure",
+    execute = function()
+
+        os.executef("zpm run build-ci --verbose --skip-lock %s %s", _ARGS[1], _ARGS[2])
+        os.executef("zpm run test-ci --verbose --skip-lock %s %s", _ARGS[1], _ARGS[2])
+
+    end
+}
+
+zpm.newaction {
+    trigger = "build-ci-application",
+    description = "Build this library with a default structure",
+    execute = function()
+
+        os.executef("zpm run build-ci --verbose %s %s", _ARGS[1], _ARGS[2])
+        os.executef("zpm run test-ci --verbose %s %s", _ARGS[1], _ARGS[2])
+
+    end
+}
+
+zpm.newaction {
     trigger = "test-ci",
     description = "Test this library with a default structure",
     execute = function()
