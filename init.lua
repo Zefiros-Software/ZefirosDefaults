@@ -194,12 +194,6 @@ function zefiros.setDefaults( name, options )
             name .. "/include/**.h",
             name .. "/**.licenseheader"
             }
-
-        if not options.mayLink then
-            files {
-                "extern/dummy.cpp"
-            }
-        end
             
         filter "not HeaderOnly*"           
             files { 
