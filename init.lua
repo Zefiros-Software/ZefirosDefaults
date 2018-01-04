@@ -70,7 +70,9 @@ function zefiros.setDefaults( name, options )
 	objdir "bin/obj/"
 
 	vectorextensions "SSE2"
-	warnings "Extra"
+    warnings "Extra"
+    
+    flags "MultiProcessorCompile"
 
     filter "system:not macosx"
         linkgroups "On"
@@ -260,7 +262,9 @@ function zefiros.setTestZPMDefaults( name, options )
 	objdir "bin/obj/"
 
     optimize "Speed"
-	warnings "Extra"
+    warnings "Extra"
+    
+    flags "MultiProcessorCompile"
     
     --filter "system:not macosx"
     --    linkgroups "On"
