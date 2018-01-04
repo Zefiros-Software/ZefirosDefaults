@@ -310,14 +310,14 @@ zpm.newaction {
             
                 os.chdir(path.join(_MAIN_SCRIPT_DIR, "test"))
 
-                os.executef("zpm %s --skip-lock --verbose", vs)   
+                os.executef("zpmd %s --skip-lock --verbose", vs)   
 
                 os.fexecutef("msbuild zpm/%s-ZPM.sln", _ARGS[1])
 
                 os.chdir(current)
             else
                 
-                os.executef("zpm %s --skip-lock --verbose", vs)   
+                os.executef("zpmd %s --skip-lock --verbose", vs)   
                 
                 os.fexecutef("msbuild %s/%s.sln /property:Configuration=%s /property:Platform=%s", _ARGS[2], _ARGS[1], os.getenv("TYPE"), iif(os.getenv("PLAT"), os.getenv("PLAT"), "x64"))
             end
@@ -358,7 +358,7 @@ zpm.newaction {
 
         if os.ishost("windows") then
             
-            os.executef("zpm vs2015 --skip-lock --verbose")   
+            os.executef("zpmd vs2015 --skip-lock --verbose")   
 
             os.fexecutef("msbuild %s.sln /property:Configuration=Test /property:Platform=Win32", _ARGS[1])
             os.fexecutef("bin\\Test\\%s.exe", _ARGS[1])
