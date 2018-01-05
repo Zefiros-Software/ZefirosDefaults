@@ -23,7 +23,8 @@
 --]]
 
 zefiros = {
-    name = nil
+    name = nil,
+    env = {}
 }
 
 function zefiros.testDefinition(name)
@@ -301,6 +302,56 @@ function zefiros.setTestZPMDefaults( name, options )
     workspace()
 end
 
+function zefiros.env.vsversion()
+
+    return os.getenv("VSTUD", "vs2015")
+end
+
+function zefiros.env.type()
+
+    return os.getenv("BUILD_CONFIG", "debug")
+end
+
+function zefiros.env.arch()
+
+    return os.getenv("BUILD_ARCHITECTURE", "x86_64")
+end
+
+function zefiros.env.project()
+
+    return os.getenv("PROJECT")
+end
+
+function zefiros.env.projectDirectory()
+
+    return os.getenv("PROJECT_DIRECTORY")
+end
+
+function zefiros.env.plat()
+
+    local map = {
+        x86 = "Win32",
+        x86_64 = "x64",
+        ARM = "ARM"
+    }
+    return map[zefiros.env.arch()]
+end
+
+function zefiros.isZpmBuild()
+
+    return zefiros.env.type() == "zpm"
+end
+
+function zefiros.isCoverageBuild()
+
+    return zefiros.env.type() == "coverage"
+end
+
+function zefiros.isDebugBuild()
+
+    return zefiros.env.type() == "debug"
+end
+
 zpm.newaction {
     trigger = "build-ci",
     description = "Build this library with a default structure",
@@ -308,9 +359,9 @@ zpm.newaction {
 
         if os.ishost("windows") then
 
-            local vs = iif(os.getenv("TYPE") == "zpm", "vs2015", iif(os.getenv("VSTUD"), os.getenv("VSTUD"), "vs2015"))
+            local vs = iif(zefiros.isZpmBuild(), "vs2015", zefiros.env.vsversion())
     
-            if os.getenv("TYPE") == "zpm" then
+            if zefiros.isZpmBuild() then
 
                 local current = os.getcwd()
             
@@ -318,17 +369,17 @@ zpm.newaction {
 
                 os.executef("zpm %s --skip-lock --verbose", vs)   
 
-                os.fexecutef("msbuild zpm/%s-ZPM.sln", _ARGS[1])
+                os.fexecutef("msbuild zpm/%s-ZPM.sln", zefiros.env.project())
 
                 os.chdir(current)
             else
                 
                 os.executef("zpm %s --skip-lock --verbose", vs)   
                 
-                os.fexecutef("msbuild %s/%s.sln /property:Configuration=%s /property:Platform=%s", _ARGS[2], _ARGS[1], os.getenv("TYPE"), iif(os.getenv("PLAT"), os.getenv("PLAT"), "x64"))
+                os.fexecutef("msbuild %s/%s.sln /property:Configuration=%s /property:Platform=%s", zefiros.env.projectDirectory(), zefiros.env.project(), zefiros.env.type(), zefiros.env.plat())
             end
         else
-            if os.getenv("TYPE") == "zpm" then
+            if zefiros.isZpmBuild() then
 
                 local current = os.getcwd()
             
@@ -347,9 +398,9 @@ zpm.newaction {
                 os.executef("zpm gmake --skip-lock --verbose")   
                 
                 local current = os.getcwd()
-                os.chdir(path.join(_MAIN_SCRIPT_DIR, _ARGS[2]))
+                os.chdir(path.join(_MAIN_SCRIPT_DIR, zefiros.env.projectDirectory()))
 
-                os.fexecutef("make config=%s_%s", os.getenv("TYPE"), os.getenv("ARCH"))
+                os.fexecutef("make config=%s_%s", zefiros.env.type(), zefiros.env.arch())
 
                 os.chdir(current)
             end
@@ -366,15 +417,27 @@ zpm.newaction {
             
             os.executef("zpm vs2015 --skip-lock --verbose")   
 
-            os.fexecutef("msbuild %s.sln /property:Configuration=Test /property:Platform=Win32", _ARGS[1])
-            os.fexecutef("bin\\Test\\%s.exe", _ARGS[1])
+            os.fexecutef("msbuild %s.sln /property:Configuration=Test /property:Platform=Win32", zefiros.env.project())
+            os.fexecutef("bin\\Test\\%s.exe", zefiros.env.project())
         else
 
             os.executef("zpm gmake --skip-lock --verbose")   
 
             os.fexecutef("make")
-            os.fexecutef("./bin/Test/%s", _ARGS[1])
+            os.fexecutef("./bin/Test/%s", zefiros.env.project())
         end
+    end
+}
+
+zpm.newaction {
+    trigger = "deploy-ci-library",
+    description = "Deploy this library with a default structure",
+    execute = function()
+
+        if os.ishost("linux") and zefiros.isCoverageBuild() then
+            os.fexecutef("codecov")
+        end
+
     end
 }
 
@@ -383,8 +446,8 @@ zpm.newaction {
     description = "Build this library with a default structure",
     execute = function()
 
-        os.fexecutef("zpm run build-ci --verbose --skip-lock %s %s", _ARGS[1], _ARGS[2])
-        os.fexecutef("zpm run test-ci --verbose %s %s", _ARGS[1], _ARGS[2])
+        os.fexecutef("zpm run build-ci --verbose --skip-lock %s %s", zefiros.env.project(), zefiros.env.projectDirectory())
+        os.fexecutef("zpm run test-ci --verbose %s %s", zefiros.env.project(), zefiros.env.projectDirectory())
 
     end
 }
@@ -394,8 +457,8 @@ zpm.newaction {
     description = "Build this library with a default structure",
     execute = function()
 
-        os.fexecutef("zpm run build-ci --verbose %s %s", _ARGS[1], _ARGS[2])
-        os.fexecutef("zpm run test-ci --verbose %s %s", _ARGS[1], _ARGS[2])
+        os.fexecutef("zpm run build-ci --verbose %s %s", zefiros.env.project(), zefiros.env.projectDirectory())
+        os.fexecutef("zpm run test-ci --verbose %s %s", zefiros.env.project(), zefiros.env.projectDirectory())
 
     end
 }
@@ -407,26 +470,26 @@ zpm.newaction {
 
         if os.ishost("windows") then       
             
-            if os.getenv("TYPE") == "zpm" then
-                os.fexecutef("test\\bin\\%s\\%s-zpm-test.exe", iif(os.getenv("ARCH"), os.getenv("ARCH"), "x86"), _ARGS[2])     
+            if zefiros.isZpmBuild() then
+                os.fexecutef("test\\bin\\%s\\%s-zpm-test.exe", zefiros.env.arch(), zefiros.env.projectDirectory())     
             else
-                if os.getenv("TYPE") == "debug" then
-                    os.fexecutef("bin\\%s\\%s-testd.exe", iif(os.getenv("ARCH"), os.getenv("ARCH"), "x86"), _ARGS[2])     
+                if zefiros.isDebugBuild() then
+                    os.fexecutef("bin\\%s\\%s-testd.exe", zefiros.env.arch(), zefiros.env.projectDirectory())     
                 else
-                    os.fexecutef("bin\\%s\\%s-test.exe", iif(os.getenv("ARCH"), os.getenv("ARCH"), "x86"), _ARGS[2])     
+                    os.fexecutef("bin\\%s\\%s-test.exe", zefiros.env.arch(), zefiros.env.projectDirectory())     
                 end
             end
         else
             
-            if os.getenv("TYPE") == "zpm" then
-                os.fexecutef("./test/bin/%s/%s-zpm-test", iif(os.getenv("ARCH"), os.getenv("ARCH"), "x86"), _ARGS[2])     
+            if zefiros.isZpmBuild() then
+                os.fexecutef("./test/bin/%s/%s-zpm-test", zefiros.env.arch(), zefiros.env.projectDirectory())     
             else
-                if os.getenv("TYPE") == "debug" then
-                    os.fexecutef("./bin/%s/%s-testd", iif(os.getenv("ARCH"), os.getenv("ARCH"), "x86"), _ARGS[2])    
-                elseif os.getenv("TYPE") == "coverage" then
-                    os.fexecutef("./%s-testcd", _ARGS[2])     
+                if zefiros.isDebugBuild() then
+                    os.fexecutef("./bin/%s/%s-testd", zefiros.env.arch(), zefiros.env.projectDirectory())    
+                elseif zefiros.isCoverageBuild() then
+                    os.fexecutef("./%s-testcd", zefiros.env.projectDirectory())     
                 else
-                    os.fexecutef("./bin/%s/%s-test", iif(os.getenv("ARCH"), os.getenv("ARCH"), "x86"), _ARGS[2])     
+                    os.fexecutef("./bin/%s/%s-test", zefiros.env.arch(), zefiros.env.projectDirectory())     
                 end
             end
         end
