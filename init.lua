@@ -305,18 +305,19 @@ function zefiros.env.vsversion()
     return os.getenv("VS_VERSION", "vs2015")
 end
 
-function zefiros.env.type()
+function zefiros.env.buildConfig()
 
     return os.getenv("BUILD_CONFIG", "debug")
 end
 
-function zefiros.env.arch()
+function zefiros.env.architecture()
 
     return os.getenv("BUILD_ARCHITECTURE", "x86_64")
 end
 
 function zefiros.env.project()
 
+    print(_ARGS[1], zefiros.env.projectDirectory(), zefiros.env.buildConfig(), zefiros.env.platform())
     if _ARGS[1] then
         return _ARGS[1]
     end
@@ -340,29 +341,29 @@ function zefiros.env.projectDirectory()
     return result
 end
 
-function zefiros.env.plat()
+function zefiros.env.platform()
 
     local map = {
         x86 = "Win32",
         x86_64 = "x64",
         ARM = "ARM"
     }
-    return map[zefiros.env.arch()]
+    return map[zefiros.env.architecture()]
 end
 
 function zefiros.isZpmBuild()
 
-    return zefiros.env.type() == "zpm"
+    return zefiros.env.buildConfig() == "zpm"
 end
 
 function zefiros.isCoverageBuild()
 
-    return zefiros.env.type() == "coverage"
+    return zefiros.env.buildConfig() == "coverage"
 end
 
 function zefiros.isDebugBuild()
 
-    return zefiros.env.type() == "debug"
+    return zefiros.env.buildConfig() == "debug"
 end
 
 zpm.newaction {
@@ -387,7 +388,7 @@ zpm.newaction {
                 
                 os.executef("zpmd %s --skip-lock --verbose", zefiros.env.vsversion())   
                 
-                os.fexecutef("msbuild %s/%s.sln /m /property:Configuration=%s /property:Platform=%s", zefiros.env.projectDirectory(), zefiros.env.project(), zefiros.env.type(), zefiros.env.plat())
+                os.fexecutef("msbuild %s/%s.sln /m /property:Configuration=%s /property:Platform=%s", zefiros.env.projectDirectory(), zefiros.env.project(), zefiros.env.buildConfig(), zefiros.env.platform())
             end
         else
             if zefiros.isZpmBuild() then
@@ -411,7 +412,7 @@ zpm.newaction {
                 local current = os.getcwd()
                 os.chdir(path.join(_MAIN_SCRIPT_DIR, zefiros.env.projectDirectory()))
 
-                os.fexecutef("make config=%s_%s", zefiros.env.type(), zefiros.env.arch())
+                os.fexecutef("make config=%s_%s", zefiros.env.buildConfig(), zefiros.env.architecture())
 
                 os.chdir(current)
             end
@@ -460,9 +461,6 @@ zpm.newaction {
     trigger = "update-library",
     description = "Update this library to the newest config",
     execute = function()
-        print(zefiros.env.projectDirectory())
-        return nil
-        --[[
         local result, code = os.outputof("clang-formatf --version")
         if code ~= 0 then
 
@@ -499,7 +497,6 @@ zpm.newaction {
 
         os.execute("pip install --upgrade git+https://github.com/Zefiros-Software/licenseheaders.git")
         os.executef("python -m licenseheaders -t %s -o \"Zefiros Software\" -d \"%s\" -y 2016-2018", path.join(zpm.env.getScriptPath(), "mit.tmpl"), path.join(_MAIN_SCRIPT_DIR, zefiros.env.projectDirectory()))
-        ]]
     end
 }
 
@@ -533,25 +530,25 @@ zpm.newaction {
         if os.ishost("windows") then       
             
             if zefiros.isZpmBuild() then
-                os.fexecutef("test\\bin\\%s\\%s-zpm-test.exe", zefiros.env.arch(), zefiros.env.projectDirectory())     
+                os.fexecutef("test\\bin\\%s\\%s-zpm-test.exe", zefiros.env.architecture(), zefiros.env.projectDirectory())     
             else
                 if zefiros.isDebugBuild() then
-                    os.fexecutef("bin\\%s\\%s-testd.exe", zefiros.env.arch(), zefiros.env.projectDirectory())     
+                    os.fexecutef("bin\\%s\\%s-testd.exe", zefiros.env.architecture(), zefiros.env.projectDirectory())     
                 else
-                    os.fexecutef("bin\\%s\\%s-test.exe", zefiros.env.arch(), zefiros.env.projectDirectory())     
+                    os.fexecutef("bin\\%s\\%s-test.exe", zefiros.env.architecture(), zefiros.env.projectDirectory())     
                 end
             end
         else
             
             if zefiros.isZpmBuild() then
-                os.fexecutef("./test/bin/%s/%s-zpm-test", zefiros.env.arch(), zefiros.env.projectDirectory())     
+                os.fexecutef("./test/bin/%s/%s-zpm-test", zefiros.env.architecture(), zefiros.env.projectDirectory())     
             else
                 if zefiros.isDebugBuild() then
-                    os.fexecutef("./bin/%s/%s-testd", zefiros.env.arch(), zefiros.env.projectDirectory())    
+                    os.fexecutef("./bin/%s/%s-testd", zefiros.env.architecture(), zefiros.env.projectDirectory())    
                 elseif zefiros.isCoverageBuild() then
                     os.fexecutef("./%s-testcd", zefiros.env.projectDirectory())     
                 else
-                    os.fexecutef("./bin/%s/%s-test", zefiros.env.arch(), zefiros.env.projectDirectory())     
+                    os.fexecutef("./bin/%s/%s-test", zefiros.env.architecture(), zefiros.env.projectDirectory())     
                 end
             end
         end
