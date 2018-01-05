@@ -71,7 +71,9 @@ function zefiros.setDefaults( name, options )
 	objdir "bin/obj/"
 
 	vectorextensions "SSE2"
-	warnings "Extra"
+    warnings "Extra"
+    
+    flags "MultiProcessorCompile"
 
     filter "system:not macosx"
         linkgroups "On"
@@ -195,12 +197,6 @@ function zefiros.setDefaults( name, options )
             name .. "/include/**.h",
             name .. "/**.licenseheader"
             }
-
-        if not options.mayLink then
-            files {
-                "extern/dummy.cpp"
-            }
-        end
             
         filter "not HeaderOnly*"           
             files { 
@@ -267,7 +263,9 @@ function zefiros.setTestZPMDefaults( name, options )
 	objdir "bin/obj/"
 
     optimize "Speed"
-	warnings "Extra"
+    warnings "Extra"
+    
+    flags "MultiProcessorCompile"
     
     --filter "system:not macosx"
     --    linkgroups "On"
@@ -367,16 +365,16 @@ zpm.newaction {
             
                 os.chdir(path.join(_MAIN_SCRIPT_DIR, "test"))
 
-                os.executef("zpm %s --skip-lock --verbose", vs)   
+                os.executef("zpmd %s --skip-lock --verbose", vs)   
 
-                os.fexecutef("msbuild zpm/%s-ZPM.sln", zefiros.env.project())
+                os.fexecutef("msbuild zpm/%s-ZPM.sln /m", zefiros.env.project())
 
                 os.chdir(current)
             else
                 
-                os.executef("zpm %s --skip-lock --verbose", vs)   
+                os.executef("zpmd %s --skip-lock --verbose", vs)   
                 
-                os.fexecutef("msbuild %s/%s.sln /property:Configuration=%s /property:Platform=%s", zefiros.env.projectDirectory(), zefiros.env.project(), zefiros.env.type(), zefiros.env.plat())
+                os.fexecutef("msbuild %s/%s.sln /m /property:Configuration=%s /property:Platform=%s", zefiros.env.projectDirectory(), zefiros.env.project(), zefiros.env.type(), zefiros.env.plat())
             end
         else
             if zefiros.isZpmBuild() then
@@ -415,9 +413,9 @@ zpm.newaction {
 
         if os.ishost("windows") then
             
-            os.executef("zpm vs2015 --skip-lock --verbose")   
+            os.executef("zpmd vs2015 --skip-lock --verbose")   
 
-            os.fexecutef("msbuild %s.sln /property:Configuration=Test /property:Platform=Win32", zefiros.env.project())
+            os.fexecutef("msbuild %s.sln /m /property:Configuration=Test /property:Platform=Win32", zefiros.env.project())
             os.fexecutef("bin\\Test\\%s.exe", zefiros.env.project())
         else
 
