@@ -317,12 +317,18 @@ end
 
 function zefiros.env.project()
 
-    return _ARGS[1] or os.getenv("PROJECT")
+    if _ARGS[1] then
+        return _ARGS[1]
+    end
+    return os.getenv("PROJECT")
 end
 
 function zefiros.env.projectDirectory()
 
-    local result = _ARGS[2] or os.getenv("PROJECT_DIRECTORY")
+    if _ARGS[2] then
+        return _ARGS[2]
+    end
+    local result = os.getenv("PROJECT_DIRECTORY")
     if not result then
         
         local candidates = os.matchdirs("*/include/")
@@ -454,7 +460,9 @@ zpm.newaction {
     trigger = "update-library",
     description = "Update this library to the newest config",
     execute = function()
-
+        print(zefiros.env.projectDirectory())
+        return nil
+        --[[
         local result, code = os.outputof("clang-formatf --version")
         if code ~= 0 then
 
@@ -481,13 +489,17 @@ zpm.newaction {
         os.executef("astyle --options=%s --recursive  %s/*.cpp  %s/*.h", astylerc, dir, dir)
         os.executef("astyle --options=%s  --recursive  %s/test/*.cpp  %s/test/*.h", astylerc, _MAIN_SCRIPT_DIR, _MAIN_SCRIPT_DIR)
         
-        local license = string.format("extensions: .h .cpp .cc .hpp\n/**\n * %s\n */", zpm.util.readAll(path.join(zpm.env.getScriptPath(), "mit.tmpl")):gsub("${years}", "%%CurrentYear%%"):gsub("${owner}", "Zefiros Software"):gsub("\n", "\n * "):gsub("%s*$", ""))
+        local olicense = string.format("extensions: .h .cpp .cc .hpp\n/**\n * %s\n */", zpm.util.readAll(path.join(zpm.env.getScriptPath(), "mit.tmpl")):gsub("${years}", "%%CurrentYear%%"):gsub("${owner}", "Zefiros Software"):gsub("\n", "\n * "))
+        local license = ""
+        for line in zpm.util.magiclines(olicense) do
+            license = license .. line:gsub("(%s*)$", "") .. "\n"
+        end
+
         zpm.util.writeAll(path.join(dir, ("%s.licenseheader"):format(zefiros.env.projectDirectory())), license)
 
         os.execute("pip install --upgrade git+https://github.com/Zefiros-Software/licenseheaders.git")
         os.executef("python -m licenseheaders -t %s -o \"Zefiros Software\" -d \"%s\" -y 2016-2018", path.join(zpm.env.getScriptPath(), "mit.tmpl"), path.join(_MAIN_SCRIPT_DIR, zefiros.env.projectDirectory()))
-        print("hello")
-
+        ]]
     end
 }
 
