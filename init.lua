@@ -302,7 +302,7 @@ end
 
 function zefiros.env.vsversion()
 
-    return os.getenv("VSTUD", "vs2015")
+    return os.getenv("VS_VERSION", "vs2015")
 end
 
 function zefiros.env.type()
@@ -317,12 +317,21 @@ end
 
 function zefiros.env.project()
 
-    return os.getenv("PROJECT")
+    return _ARGS[1] or os.getenv("PROJECT")
 end
 
 function zefiros.env.projectDirectory()
 
-    return os.getenv("PROJECT_DIRECTORY")
+    local result = _ARGS[2] or os.getenv("PROJECT_DIRECTORY")
+    if not result then
+        
+        local candidates = os.matchdirs("*/include/")
+        if #candidates == 1 then
+            result = candidates[1]:match("(.*)/include")
+        end
+    end
+
+    return result
 end
 
 function zefiros.env.plat()
@@ -356,8 +365,6 @@ zpm.newaction {
     execute = function()
 
         if os.ishost("windows") then
-
-            local vs = iif(zefiros.isZpmBuild(), "vs2015", zefiros.env.vsversion())
     
             if zefiros.isZpmBuild() then
 
@@ -365,14 +372,14 @@ zpm.newaction {
             
                 os.chdir(path.join(_MAIN_SCRIPT_DIR, "test"))
 
-                os.executef("zpmd %s --skip-lock --verbose", vs)   
+                os.executef("zpmd %s --skip-lock --verbose", zefiros.env.vsversion())   
 
                 os.fexecutef("msbuild zpm/%s-ZPM.sln /m", zefiros.env.project())
 
                 os.chdir(current)
             else
                 
-                os.executef("zpmd %s --skip-lock --verbose", vs)   
+                os.executef("zpmd %s --skip-lock --verbose", zefiros.env.vsversion())   
                 
                 os.fexecutef("msbuild %s/%s.sln /m /property:Configuration=%s /property:Platform=%s", zefiros.env.projectDirectory(), zefiros.env.project(), zefiros.env.type(), zefiros.env.plat())
             end
@@ -433,8 +440,53 @@ zpm.newaction {
     execute = function()
 
         if os.ishost("linux") and zefiros.isCoverageBuild() then
+            
+            local codecov = path.join(zpm.env.getScriptPath(), ".codecov.yml")
+            
+            zpm.util.writeAll(path.join(_MAIN_SCRIPT_DIR, ".codecov.yml"), zpm.util.readAll(codecov))
             os.fexecutef("codecov")
         end
+
+    end
+}
+
+zpm.newaction {
+    trigger = "update-library",
+    description = "Update this library to the newest config",
+    execute = function()
+
+        local result, code = os.outputof("clang-formatf --version")
+        if code ~= 0 then
+
+            if os.ishost("linux") then
+                os.execute("sudo apt-get install astyle")
+            elseif os.ishost("windows") then
+                local destination = zpm.loader.http:downloadFromZipTo("https://kent.dl.sourceforge.net/project/astyle/astyle/astyle%203.0.1/AStyle_3.0.1_windows.zip")
+                local out = path.join(zpm.env.getToolsDirectory(), "astyle.exe")
+                if os.isfile(out) then
+                    zpm.util.hideProtectedFile(out)
+                end
+                local ok, err = os.copyfile(path.join(destination, "AStyle/bin/AStyle.exe"), out)
+                assert(ok, ("Failed to copy astyle: '%s'"):format(err))
+            elseif os.ishost("macosx") then
+                os.execute("brew install astyle")
+            end
+        end
+        zpm.util.writeAll(path.join(_MAIN_SCRIPT_DIR, ".gitignore"), zpm.util.readAll(path.join(zpm.env.getScriptPath(), ".gitignore")))
+        zpm.util.writeAll(path.join(_MAIN_SCRIPT_DIR, "LICENSE.md"), zpm.util.readAll(path.join(zpm.env.getScriptPath(), "LICENSE.md")))
+
+        local astylerc = path.join(_MAIN_SCRIPT_DIR, ".astylerc")
+        zpm.util.writeAll(astylerc, zpm.util.readAll(path.join(zpm.env.getScriptPath(), ".astylerc")))
+        local dir = path.join(_MAIN_SCRIPT_DIR, zefiros.env.projectDirectory())
+        os.executef("astyle --options=%s --recursive  %s/*.cpp  %s/*.h", astylerc, dir, dir)
+        os.executef("astyle --options=%s  --recursive  %s/test/*.cpp  %s/test/*.h", astylerc, _MAIN_SCRIPT_DIR, _MAIN_SCRIPT_DIR)
+        
+        local license = string.format("extensions: .h .cpp .cc .hpp\n/**\n * %s\n */", zpm.util.readAll(path.join(zpm.env.getScriptPath(), "mit.tmpl")):gsub("${years}", "%%CurrentYear%%"):gsub("${owner}", "Zefiros Software"):gsub("\n", "\n * "):gsub("%s*$", ""))
+        zpm.util.writeAll(path.join(dir, ("%s.licenseheader"):format(zefiros.env.projectDirectory())), license)
+
+        os.execute("pip install --upgrade git+https://github.com/Zefiros-Software/licenseheaders.git")
+        os.executef("python -m licenseheaders -t %s -o \"Zefiros Software\" -d \"%s\" -y 2016-2018", path.join(zpm.env.getScriptPath(), "mit.tmpl"), path.join(_MAIN_SCRIPT_DIR, zefiros.env.projectDirectory()))
+        print("hello")
 
     end
 }
