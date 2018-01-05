@@ -577,7 +577,10 @@ function zefiros.onLoad()
             os.executef("sudo apt-get install gcc-%s-multilib g++-%s-multilib", gccVersion, gccVersion)
         
             -- for coverage
-            os.execute("sudo pip install codecov")
+            if zefiros.isCoverageBuild() then
+                os.execute("sudo pip install codecov")
+                os.executef("sudo update-alternatives --install /usr/bin/gcov gcov /usr/bin/gcc-%s 60", gccVersion)
+            end
         end
     end
 end
