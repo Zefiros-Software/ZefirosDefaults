@@ -379,14 +379,14 @@ zpm.newaction {
             
                 os.chdir(path.join(_MAIN_SCRIPT_DIR, "test"))
 
-                os.executef("zpmd %s --skip-lock --verbose", zefiros.env.vsversion())   
+                os.executef("zpmd %s --skip-lock --update -verbose", zefiros.env.vsversion())   
 
                 os.fexecutef("msbuild zpm/%s-ZPM.sln /m", zefiros.env.project())
 
                 os.chdir(current)
             else
                 
-                os.executef("zpmd %s --skip-lock --verbose", zefiros.env.vsversion())   
+                os.executef("zpmd %s --skip-lock --update --verbose", zefiros.env.vsversion())   
                 
                 os.fexecutef("msbuild %s/%s.sln /m /property:Configuration=%s /property:Platform=%s", zefiros.env.projectDirectory(), zefiros.env.project(), zefiros.env.buildConfig(), zefiros.env.platform())
             end
@@ -397,7 +397,7 @@ zpm.newaction {
             
                 os.chdir(path.join(_MAIN_SCRIPT_DIR, "test"))
 
-                os.executef("zpm gmake --skip-lock")   
+                os.executef("zpm gmake --update --skip-lock")   
             
                 os.chdir(path.join(_MAIN_SCRIPT_DIR, "test/zpm"))
 
@@ -407,7 +407,7 @@ zpm.newaction {
             else
                 
 
-                os.executef("zpm gmake --skip-lock --verbose")   
+                os.executef("zpm gmake --update --skip-lock --verbose")   
                 
                 local current = os.getcwd()
                 os.chdir(path.join(_MAIN_SCRIPT_DIR, zefiros.env.projectDirectory()))
