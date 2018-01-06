@@ -256,7 +256,7 @@ function zefiros.setTestZPMDefaults( name, options )
 
     configurations { "Test" }
 
-    platforms { "x86" }
+    platforms { "x64" }
 
     startproject( name .. "-zpm-test" )
 	location "zpm"
@@ -315,7 +315,7 @@ end
 
 function zefiros.env.architecture()
 
-    return os.getenv("BUILD_ARCHITECTURE", "x86_64")
+    return os.getenv("BUILD_ARCHITECTURE", "x64")
 end
 
 function zefiros.env.project()
