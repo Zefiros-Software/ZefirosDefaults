@@ -306,6 +306,9 @@ function zefiros.env.vsversion()
 end
 
 function zefiros.env.buildConfig()
+    if _OPTIONS['build_configuration'] then
+        return _OPTIONS['build_configuration']
+    end
 
     return os.getenv("BUILD_CONFIG", "debug")
 end
@@ -420,6 +423,18 @@ zpm.newaction {
     end
 }
 
+zpm.newoption {
+    trigger = "build_configuration",
+    description = "Sets the kind of build you want to perform",
+    value = "TYPE",
+    allowed = {
+        { "coverage", "Starts a coverage build."},
+        { "release", "Starts a release build."},
+        { "debug", "Starts a debug build."},
+        { "zpm", "Starts a zpm build."}
+     }
+}
+
 zpm.newaction {
     trigger = "test-definition",
     description = "Test this definition with a default structure",
@@ -505,8 +520,8 @@ zpm.newaction {
     description = "Build this library with a default structure",
     execute = function()
 
-        os.fexecutef("zpm run build-ci --verbose --skip-lock %s %s", zefiros.env.project(), zefiros.env.projectDirectory())
-        os.fexecutef("zpm run test-ci --verbose %s %s", zefiros.env.project(), zefiros.env.projectDirectory())
+        os.fexecutef("zpm run build-ci --verbose --skip-lock %s %s --build_configuration=%s", zefiros.env.project(), zefiros.env.projectDirectory(), zefiros.env.buildConfig())
+        os.fexecutef("zpm run test-ci --verbose %s %s --build_configuration=%s", zefiros.env.project(), zefiros.env.projectDirectory(), zefiros.env.buildConfig())
 
     end
 }
@@ -516,8 +531,8 @@ zpm.newaction {
     description = "Build this library with a default structure",
     execute = function()
 
-        os.fexecutef("zpm run build-ci --verbose %s %s", zefiros.env.project(), zefiros.env.projectDirectory())
-        os.fexecutef("zpm run test-ci --verbose %s %s", zefiros.env.project(), zefiros.env.projectDirectory())
+        os.fexecutef("zpm run build-ci --verbose %s %s --build_configuration=%s", zefiros.env.project(), zefiros.env.projectDirectory(), zefiros.env.buildConfig())
+        os.fexecutef("zpm run test-ci --verbose %s %s --build_configuration=%s", zefiros.env.project(), zefiros.env.projectDirectory(), zefiros.env.buildConfig())
 
     end
 }
