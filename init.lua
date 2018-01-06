@@ -545,7 +545,7 @@ zpm.newaction {
         if os.ishost("windows") then       
             
             if zefiros.isZpmBuild() then
-                os.fexecutef("test\\bin\\%s\\%s-zpm-test.exe", zefiros.env.architecture(), zefiros.env.projectDirectory())     
+                os.fexecutef("test\\zpm\\bin\\%s\\%s-zpm-test.exe", zefiros.env.architecture(), zefiros.env.projectDirectory())     
             else
                 if zefiros.isDebugBuild() then
                     os.fexecutef("bin\\%s\\%s-testd.exe", zefiros.env.architecture(), zefiros.env.projectDirectory())     
@@ -556,7 +556,7 @@ zpm.newaction {
         else
             
             if zefiros.isZpmBuild() then
-                os.fexecutef("./test/bin/%s/%s-zpm-test", zefiros.env.architecture(), zefiros.env.projectDirectory())     
+                os.fexecutef("./test/zpm/bin/%s/%s-zpm-test", zefiros.env.architecture(), zefiros.env.projectDirectory())     
             else
                 if zefiros.isDebugBuild() then
                     os.fexecutef("./bin/%s/%s-testd", zefiros.env.architecture(), zefiros.env.projectDirectory())    
