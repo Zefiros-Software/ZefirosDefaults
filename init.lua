@@ -582,9 +582,9 @@ function zefiros.onLoad()
         if os.ishost("linux") and not zpm.loader.config(('install.module.zefiros-software.miniconda.gcc-%s'):format(gccVersion)) then 
             zpm.loader.config:set(('install.module.zefiros-software.miniconda.gcc-%s'):format(gccVersion), "installed", true)
             os.execute("sudo add-apt-repository ppa:ubuntu-toolchain-r/test -y")
-            os.execute("sudo apt-get update -y")
+            os.execute("sudo apt-get -qq update -y")
         
-            os.executef("sudo apt-get install gcc-%s g++-%s -y", gccVersion, gccVersion)
+            os.executef("sudo apt-get install gcc-%s g++-%s gcov-%s -y", gccVersion, gccVersion, gccVersion)
             os.executef("sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-%s 60", gccVersion)
             os.executef("sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-%s 60", gccVersion)
             os.executef("sudo update-alternatives --config gcc")
