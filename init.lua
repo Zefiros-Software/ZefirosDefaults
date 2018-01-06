@@ -594,7 +594,7 @@ function zefiros.onLoad()
             -- for coverage
             if zefiros.isCoverageBuild() then
                 os.execute("sudo pip install codecov")
-                os.executef("sudo update-alternatives --install /usr/bin/gcov gcov /usr/bin/gcc-%s 60", gccVersion)
+                os.executef("sudo update-alternatives --install /usr/bin/gcov gcov /usr/bin/gcov-%s 60", gccVersion)
             end
         end
     end
