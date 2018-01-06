@@ -256,7 +256,7 @@ function zefiros.setTestZPMDefaults( name, options )
 
     configurations { "Test" }
 
-    platforms { "x64" }
+    platforms { "x86_64" }
 
     startproject( name .. "-zpm-test" )
 	location "zpm"
@@ -270,10 +270,10 @@ function zefiros.setTestZPMDefaults( name, options )
     --filter "system:not macosx"
     --    linkgroups "On"
 
-    filter "platforms:x86"
-        targetdir "bin/x86/"
-        debugdir "bin/x86/"
-        architecture "x86"
+    filter "platforms:x86_64"
+        targetdir "bin/x86_64/"
+        debugdir "bin/x86_64/"
+        architecture "x86_64"
 
     filter {}
 			
@@ -315,7 +315,7 @@ end
 
 function zefiros.env.architecture()
 
-    return os.getenv("BUILD_ARCHITECTURE", "x64")
+    return os.getenv("BUILD_ARCHITECTURE", "x86_64")
 end
 
 function zefiros.env.project()
