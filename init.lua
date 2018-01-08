@@ -384,7 +384,7 @@ zpm.newaction {
 
                 os.executef("zpmd %s --skip-lock --update -verbose", zefiros.env.vsversion())   
 
-                os.fexecutef("msbuild zpm/%s-ZPM.sln /m", zefiros.env.project())
+                os.fexecutef("msbuild zpm/%s-ZPM.sln /property:Platform=x64 /m", zefiros.env.project())
 
                 os.chdir(current)
             else
