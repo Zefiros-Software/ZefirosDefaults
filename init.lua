@@ -585,11 +585,14 @@ function zefiros.onLoad()
             os.execute("sudo apt-get -qq update -y")
         
             os.executef("sudo apt-get install g++-%s -y", gccVersion)
-            --os.executef("sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-%s 60", gccVersion)
             os.executef("sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-%s 60", gccVersion)
-            --os.executef("sudo update-alternatives --config gcc")
             os.executef("sudo update-alternatives --config g++")
-            --os.executef("sudo apt-get install gcc-%s-multilib g++-%s-multilib", gccVersion, gccVersion)
+
+            if zefiros.env.architecture() == "x86" then
+                --os.executef("sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-%s 60", gccVersion)
+                --os.executef("sudo update-alternatives --config gcc")
+                os.executef("sudo apt-get install gcc-%s-multilib g++-%s-multilib", gccVersion, gccVersion)
+            end
         
             -- for coverage
             if zefiros.isCoverageBuild() then
