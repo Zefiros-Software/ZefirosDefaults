@@ -545,25 +545,25 @@ zpm.newaction {
         if os.ishost("windows") then       
             
             if zefiros.isZpmBuild() then
-                os.fexecutef("test\\bin\\%s\\%s-zpm-test.exe", zefiros.env.architecture(), zefiros.env.projectDirectory())     
+                os.fexecutef("cd test\\bin\\%s\\ && .\\%s-zpm-test.exe", zefiros.env.architecture(), zefiros.env.projectDirectory())     
             else
                 if zefiros.isDebugBuild() then
-                    os.fexecutef("bin\\%s\\%s-testd.exe", zefiros.env.architecture(), zefiros.env.projectDirectory())     
+                    os.fexecutef("cd bin\\%s\\ && .\\%s-testd.exe", zefiros.env.architecture(), zefiros.env.projectDirectory())     
                 else
-                    os.fexecutef("bin\\%s\\%s-test.exe", zefiros.env.architecture(), zefiros.env.projectDirectory())     
+                    os.fexecutef("cd bin\\%s\\ && .\\%s-test.exe", zefiros.env.architecture(), zefiros.env.projectDirectory())     
                 end
             end
         else
             
             if zefiros.isZpmBuild() then
-                os.fexecutef("./test/bin/%s/%s-zpm-test", zefiros.env.architecture(), zefiros.env.projectDirectory())     
+                os.fexecutef("cd ./test/bin/%s/ && ./%s-zpm-test", zefiros.env.architecture(), zefiros.env.projectDirectory())     
             else
                 if zefiros.isDebugBuild() then
-                    os.fexecutef("./bin/%s/%s-testd", zefiros.env.architecture(), zefiros.env.projectDirectory())    
+                    os.fexecutef("cd ./bin/%s/ && ./%s-testd", zefiros.env.architecture(), zefiros.env.projectDirectory())    
                 elseif zefiros.isCoverageBuild() then
                     os.fexecutef("./%s-testcd", zefiros.env.projectDirectory())     
                 else
-                    os.fexecutef("./bin/%s/%s-test", zefiros.env.architecture(), zefiros.env.projectDirectory())     
+                    os.fexecutef("cd ./bin/%s/ && ./%s-test", zefiros.env.architecture(), zefiros.env.projectDirectory())     
                 end
             end
         end
