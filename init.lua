@@ -241,11 +241,6 @@ function zefiros.setDefaults( name, options )
                 if options.mayLink then
                     links( name )
                 end
-
-            filter { "system:macosx", "platforms:x86" }      
-                -- this fixes the osx x86 build    
-                -- since google benchmark uses narrowing
-                buildoptions "-Wno-c++11-narrowing"
         
             filter {}
     end
