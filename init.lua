@@ -495,13 +495,13 @@ zpm.newaction {
         zpm.util.writeAll(path.join(_MAIN_SCRIPT_DIR, ".gitignore"), zpm.util.readAll(path.join(zpm.env.getScriptPath(), ".gitignore")))
         zpm.util.writeAll(path.join(_MAIN_SCRIPT_DIR, "LICENSE.md"), zpm.util.readAll(path.join(zpm.env.getScriptPath(), "LICENSE.md")))
 
-        local astylerc = path.join(_MAIN_SCRIPT_DIR, ".astylerc")
+        local astylerc = path.join(_MAIN_SCRIPT_DIR, "templates/.astylerc")
         zpm.util.writeAll(astylerc, zpm.util.readAll(path.join(zpm.env.getScriptPath(), ".astylerc")))
         local dir = path.join(_MAIN_SCRIPT_DIR, zefiros.env.projectDirectory())
         os.executef("astyle --options=%s --recursive  %s/*.cpp  %s/*.h", astylerc, dir, dir)
         os.executef("astyle --options=%s  --recursive  %s/test/*.cpp  %s/test/*.h", astylerc, _MAIN_SCRIPT_DIR, _MAIN_SCRIPT_DIR)
         
-        local olicense = string.format("extensions: .h .cpp .cc .hpp\n/**\n * %s\n */", zpm.util.readAll(path.join(zpm.env.getScriptPath(), "mit.tmpl")):gsub("${years}", "%%CurrentYear%%"):gsub("${owner}", "Zefiros Software"):gsub("\n", "\n * "))
+        local olicense = string.format("extensions: .h .cpp .cc .hpp\n/**\n * %s\n */", zpm.util.readAll(path.join(zpm.env.getScriptPath(), "templates/mit.tmpl")):gsub("${years}", "%%CurrentYear%%"):gsub("${owner}", "Zefiros Software"):gsub("\n", "\n * "))
         local license = ""
         for line in zpm.util.magiclines(olicense) do
             license = license .. line:gsub("(%s*)$", "") .. "\n"
