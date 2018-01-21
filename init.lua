@@ -368,6 +368,26 @@ function zefiros.isDebugBuild()
     return zefiros.env.buildConfig() == "debug"
 end
 
+function zefiros.installAstyle()
+    local result, code = os.outputof("astyle --version")
+    if code ~= 0 then
+
+        if os.ishost("linux") then
+            os.execute("sudo apt-get install astyle")
+        elseif os.ishost("windows") then
+            local destination = zpm.loader.http:downloadFromZipTo("https://kent.dl.sourceforge.net/project/astyle/astyle/astyle%203.0.1/AStyle_3.0.1_windows.zip")
+            local out = path.join(zpm.env.getToolsDirectory(), "astyle.exe")
+            if os.isfile(out) then
+                zpm.util.hideProtectedFile(out)
+            end
+            local ok, err = os.copyfile(path.join(destination, "AStyle/bin/AStyle.exe"), out)
+            assert(ok, ("Failed to copy astyle: '%s'"):format(err))
+        elseif os.ishost("macosx") then
+            os.execute("brew install astyle")
+        end
+    end
+end
+
 zpm.newaction {
     trigger = "build-ci",
     description = "Build this library with a default structure",
@@ -475,23 +495,8 @@ zpm.newaction {
     trigger = "update-library",
     description = "Update this library to the newest config",
     execute = function()
-        local result, code = os.outputof("clang-formatf --version")
-        if code ~= 0 then
+        zefiros.installAstyle()
 
-            if os.ishost("linux") then
-                os.execute("sudo apt-get install astyle")
-            elseif os.ishost("windows") then
-                local destination = zpm.loader.http:downloadFromZipTo("https://kent.dl.sourceforge.net/project/astyle/astyle/astyle%203.0.1/AStyle_3.0.1_windows.zip")
-                local out = path.join(zpm.env.getToolsDirectory(), "astyle.exe")
-                if os.isfile(out) then
-                    zpm.util.hideProtectedFile(out)
-                end
-                local ok, err = os.copyfile(path.join(destination, "AStyle/bin/AStyle.exe"), out)
-                assert(ok, ("Failed to copy astyle: '%s'"):format(err))
-            elseif os.ishost("macosx") then
-                os.execute("brew install astyle")
-            end
-        end
         zpm.util.writeAll(path.join(_MAIN_SCRIPT_DIR, ".gitignore"), zpm.util.readAll(path.join(zpm.env.getScriptPath(), ".gitignore")))
         zpm.util.writeAll(path.join(_MAIN_SCRIPT_DIR, "LICENSE.md"), zpm.util.readAll(path.join(zpm.env.getScriptPath(), "LICENSE.md")))
 
@@ -499,7 +504,7 @@ zpm.newaction {
         zpm.util.writeAll(astylerc, zpm.util.readAll(path.join(zpm.env.getScriptPath(), "templates/.astylerc")))
         local dir = path.join(_MAIN_SCRIPT_DIR, zefiros.env.projectDirectory())
         os.executef("astyle --options=%s --recursive  %s/*.cpp  %s/*.h", astylerc, dir, dir)
-        os.executef("astyle --options=%s  --recursive  %s/test/*.cpp  %s/test/*.h", astylerc, _MAIN_SCRIPT_DIR, _MAIN_SCRIPT_DIR)
+        os.executef("astyle --options=%s  --recursive --exclude=%s/test/extern  %s/test/*.cpp  %s/test/*.h", astylerc, _MAIN_SCRIPT_DIR, _MAIN_SCRIPT_DIR, _MAIN_SCRIPT_DIR)
         
         local olicense = string.format("extensions: .h .cpp .cc .hpp\n/**\n * %s\n */", zpm.util.readAll(path.join(zpm.env.getScriptPath(), "templates/mit.tmpl")):gsub("${years}", "%%CurrentYear%%"):gsub("${owner}", "Zefiros Software"):gsub("\n", "\n * "))
         local license = ""
@@ -510,7 +515,8 @@ zpm.newaction {
         zpm.util.writeAll(path.join(dir, ("%s.licenseheader"):format(zefiros.env.projectDirectory())), license)
 
         os.execute("pip install --upgrade git+https://github.com/Zefiros-Software/licenseheaders.git")
-        os.executef("python -m licenseheaders -t %s -o \"Zefiros Software\" -d \"%s\" -y 2016-2018", path.join(zpm.env.getScriptPath(), "templates/mit.tmpl"), path.join(_MAIN_SCRIPT_DIR, zefiros.env.projectDirectory()))
+        os.executef("python -m licenseheaders -t %s -o \"Zefiros Software\" -d \"%s\" -e \"%stest/extern\"  \"%sextern\" -y 2016-2018", 
+                    path.join(zpm.env.getScriptPath(), "templates/mit.tmpl"), _MAIN_SCRIPT_DIR, _MAIN_SCRIPT_DIR, _MAIN_SCRIPT_DIR)
     end
 }
 
@@ -520,9 +526,61 @@ zpm.newaction {
     execute = function()
 
         local appveyor = zpm.util.readAll(path.join(zpm.env.getScriptPath(), "templates/.appveyor.yml")):gsub("{{PROJECT_NAME}}", zefiros.env.project()):gsub("{{PROJECT_DIRECTORY}}", zefiros.env.projectDirectory())
-        zpm.util.writeAll(path.join(dir, ".appveyor.yml"), appveyor)
+        zpm.util.writeAll(path.join(_MAIN_SCRIPT_DIR, ".appveyor.yml"), appveyor)
         local travis = zpm.util.readAll(path.join(zpm.env.getScriptPath(), "templates/.travis.yml")):gsub("{{PROJECT_NAME}}", zefiros.env.project()):gsub("{{PROJECT_DIRECTORY}}", zefiros.env.projectDirectory())
-        zpm.util.writeAll(path.join(dir, ".travis.yml"), travis)
+        zpm.util.writeAll(path.join(_MAIN_SCRIPT_DIR, ".travis.yml"), travis)
+
+        if os.getenv("SLACK_TRAVIS_TOKEN") then
+
+            local current = os.getcwd()
+        
+            os.chdir(_MAIN_SCRIPT_DIR)
+            
+            local hash = os.outputoff("travis encrypt \"%s\" --add notifications.slack", os.getenv("SLACK_TRAVIS_TOKEN"))
+        
+            os.chdir(current)
+        end
+    end
+}
+
+zpm.newaction {
+    trigger = "update-definition",
+    description = "Update this definition to the newest config",
+    execute = function()
+        zefiros.installAstyle()
+
+        local root = path.join(_MAIN_SCRIPT_DIR, '../')
+        zpm.util.writeAll(path.join(root, ".gitignore"), zpm.util.readAll(path.join(zpm.env.getScriptPath(), ".gitignore")))
+        zpm.util.writeAll(path.join(root, "LICENSE.md"), zpm.util.readAll(path.join(zpm.env.getScriptPath(), "LICENSE.md")))
+
+        local astylerc = path.join(root, ".astylerc")
+        zpm.util.writeAll(astylerc, zpm.util.readAll(path.join(zpm.env.getScriptPath(), "templates/.astylerc")))
+        local dir = path.join(root, zefiros.env.projectDirectory())
+        os.executef("astyle --options=%s --recursive  %s/*.cpp  %s/*.h", astylerc, dir, dir)
+        os.executef("astyle --options=%s  --recursive --exclude=%s/test/extern %s/test/*.cpp  %s/test/*.h", astylerc, root, root, root)
+        
+        local olicense = string.format("extensions: .h .cpp .cc .hpp\n/**\n * %s\n */", zpm.util.readAll(path.join(zpm.env.getScriptPath(), "templates/mit.tmpl")):gsub("${years}", "%%CurrentYear%%"):gsub("${owner}", "Zefiros Software"):gsub("\n", "\n * "))
+        local license = ""
+        for line in zpm.util.magiclines(olicense) do
+            license = license .. line:gsub("(%s*)$", "") .. "\n"
+        end
+
+        os.execute("pip install --upgrade git+https://github.com/Zefiros-Software/licenseheaders.git")
+        os.executef("python -m licenseheaders -t %s -o \"Zefiros Software\" -d \"%s\" -e \"%stest/extern\"  \"%sextern\" -y 2016-2018", 
+                    path.join(zpm.env.getScriptPath(), "templates/mit.tmpl"), root, root, root)
+    end
+}
+
+zpm.newaction {
+    trigger = "update-definition-ci",
+    description = "Update the ci configuration for this definition",
+    execute = function()
+
+        local root = path.join(_MAIN_SCRIPT_DIR, '../')
+        local appveyor = zpm.util.readAll(path.join(zpm.env.getScriptPath(), "templates/.appveyor-definition.yml")):gsub("{{PROJECT_NAME}}", zefiros.env.project())
+        zpm.util.writeAll(path.join(root, ".appveyor.yml"), appveyor)
+        local travis = zpm.util.readAll(path.join(zpm.env.getScriptPath(), "templates/.travis-definition.yml")):gsub("{{PROJECT_NAME}}", zefiros.env.project())
+        zpm.util.writeAll(path.join(root, ".travis.yml"), travis)
 
         if os.getenv("SLACK_TRAVIS_TOKEN") then
 

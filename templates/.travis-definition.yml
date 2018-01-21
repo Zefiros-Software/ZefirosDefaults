@@ -1,0 +1,20 @@
+sudo: required
+language: generic
+matrix:
+  include:
+    - os: linux
+      dist: trusty
+      env: VERSION=6
+    - os: linux
+      dist: trusty
+      env: VERSION=7
+    - os: linux
+      dist: trusty
+      env: VERSION=5
+    - os: osx
+      osx_image: xcode8
+      language: generic
+install:
+  - source /dev/stdin <<< "$(curl -s https://raw.githubusercontent.com/Zefiros-Software/ZPM/features/refactor/script/install-zpm.sh)"
+script:
+  - 'cd test && zpm run test-definition {{PROJECT_NAME}}'
