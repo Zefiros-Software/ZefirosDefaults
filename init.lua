@@ -495,8 +495,8 @@ zpm.newaction {
         zpm.util.writeAll(path.join(_MAIN_SCRIPT_DIR, ".gitignore"), zpm.util.readAll(path.join(zpm.env.getScriptPath(), ".gitignore")))
         zpm.util.writeAll(path.join(_MAIN_SCRIPT_DIR, "LICENSE.md"), zpm.util.readAll(path.join(zpm.env.getScriptPath(), "LICENSE.md")))
 
-        local astylerc = path.join(_MAIN_SCRIPT_DIR, "templates/.astylerc")
-        zpm.util.writeAll(astylerc, zpm.util.readAll(path.join(zpm.env.getScriptPath(), ".astylerc")))
+        local astylerc = path.join(_MAIN_SCRIPT_DIR, ".astylerc")
+        zpm.util.writeAll(astylerc, zpm.util.readAll(path.join(zpm.env.getScriptPath(), "templates/.astylerc")))
         local dir = path.join(_MAIN_SCRIPT_DIR, zefiros.env.projectDirectory())
         os.executef("astyle --options=%s --recursive  %s/*.cpp  %s/*.h", astylerc, dir, dir)
         os.executef("astyle --options=%s  --recursive  %s/test/*.cpp  %s/test/*.h", astylerc, _MAIN_SCRIPT_DIR, _MAIN_SCRIPT_DIR)
@@ -510,7 +510,7 @@ zpm.newaction {
         zpm.util.writeAll(path.join(dir, ("%s.licenseheader"):format(zefiros.env.projectDirectory())), license)
 
         os.execute("pip install --upgrade git+https://github.com/Zefiros-Software/licenseheaders.git")
-        os.executef("python -m licenseheaders -t %s -o \"Zefiros Software\" -d \"%s\" -y 2016-2018", path.join(zpm.env.getScriptPath(), "mit.tmpl"), path.join(_MAIN_SCRIPT_DIR, zefiros.env.projectDirectory()))
+        os.executef("python -m licenseheaders -t %s -o \"Zefiros Software\" -d \"%s\" -y 2016-2018", path.join(zpm.env.getScriptPath(), "templates/mit.tmpl"), path.join(_MAIN_SCRIPT_DIR, zefiros.env.projectDirectory()))
     end
 }
 
