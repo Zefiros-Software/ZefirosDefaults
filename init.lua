@@ -320,7 +320,6 @@ end
 
 function zefiros.env.project()
 
-    print(_ARGS[1], zefiros.env.projectDirectory(), zefiros.env.buildConfig(), zefiros.env.platform())
     if _ARGS[1] then
         return _ARGS[1]
     end
@@ -512,6 +511,29 @@ zpm.newaction {
 
         os.execute("pip install --upgrade git+https://github.com/Zefiros-Software/licenseheaders.git")
         os.executef("python -m licenseheaders -t %s -o \"Zefiros Software\" -d \"%s\" -y 2016-2018", path.join(zpm.env.getScriptPath(), "mit.tmpl"), path.join(_MAIN_SCRIPT_DIR, zefiros.env.projectDirectory()))
+    end
+}
+
+zpm.newaction {
+    trigger = "update-library-ci",
+    description = "Update the ci configuration for this library",
+    execute = function()
+
+        local appveyor = zpm.util.readAll(path.join(zpm.env.getScriptPath(), "templates/.appveyor.yml")):gsub("{{PROJECT_NAME}}", zefiros.env.project()):gsub("{{PROJECT_DIRECTORY}}", zefiros.env.projectDirectory())
+        zpm.util.writeAll(path.join(dir, ".appveyor.yml"), appveyor)
+        local travis = zpm.util.readAll(path.join(zpm.env.getScriptPath(), "templates/.travis.yml")):gsub("{{PROJECT_NAME}}", zefiros.env.project()):gsub("{{PROJECT_DIRECTORY}}", zefiros.env.projectDirectory())
+        zpm.util.writeAll(path.join(dir, ".travis.yml"), travis)
+
+        if os.getenv("SLACK_TRAVIS_TOKEN") then
+
+            local current = os.getcwd()
+        
+            os.chdir(_MAIN_SCRIPT_DIR)
+            
+            local hash = os.outputoff("travis encrypt \"%s\" --add notifications.slack", os.getenv("SLACK_TRAVIS_TOKEN"))
+        
+            os.chdir(current)
+        end
     end
 }
 
