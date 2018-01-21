@@ -34,7 +34,10 @@ function zefiros.testDefinition(name)
     project(name)
 
     kind "ConsoleApp"
-    files "test*.cpp"
+    files {
+        "main.cpp",
+        "test*.cpp"
+    }
 
     zpm.uses "Zefiros-Software/GoogleTest"
 
