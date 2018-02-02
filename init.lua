@@ -35,8 +35,7 @@ function zefiros.testDefinition(name)
 
     kind "ConsoleApp"
     files {
-        "main.cpp",
-        "test*.cpp"
+        "*.cpp"
     }
 
     zpm.uses "Zefiros-Software/GoogleTest"
@@ -506,8 +505,8 @@ zpm.newaction {
         local astylerc = path.join(_MAIN_SCRIPT_DIR, ".astylerc")
         zpm.util.writeAll(astylerc, zpm.util.readAll(path.join(zpm.env.getScriptPath(), "templates/.astylerc")))
         local dir = path.join(_MAIN_SCRIPT_DIR, zefiros.env.projectDirectory())
-        os.executef("astyle --options=%s --recursive  %s/*.cpp  %s/*.h", astylerc, dir, dir)
-        os.executef("astyle --options=%s  --recursive --exclude=%s/test/extern  %s/test/*.cpp  %s/test/*.h", astylerc, _MAIN_SCRIPT_DIR, _MAIN_SCRIPT_DIR, _MAIN_SCRIPT_DIR)
+        os.executef("astyle --options=%s --recursive --exclude=%s/test/extern/**  %s/*.cpp  %s/*.h", astylerc, dir, dir, dir)
+        os.executef("astyle --options=%s  --recursive --exclude=%s/test/extern/**  %s/test/*.cpp  %s/test/*.h", astylerc, _MAIN_SCRIPT_DIR, _MAIN_SCRIPT_DIR, _MAIN_SCRIPT_DIR)
         
         local olicense = string.format("extensions: .h .cpp .cc .hpp\n/**\n * %s\n */", zpm.util.readAll(path.join(zpm.env.getScriptPath(), "templates/mit.tmpl")):gsub("${years}", "%%CurrentYear%%"):gsub("${owner}", "Zefiros Software"):gsub("\n", "\n * "))
         local license = ""
@@ -559,8 +558,8 @@ zpm.newaction {
         local astylerc = path.join(root, ".astylerc")
         zpm.util.writeAll(astylerc, zpm.util.readAll(path.join(zpm.env.getScriptPath(), "templates/.astylerc")))
         local dir = path.join(root, zefiros.env.projectDirectory())
-        os.executef("astyle --options=%s --recursive  %s/*.cpp  %s/*.h", astylerc, dir, dir)
-        os.executef("astyle --options=%s  --recursive --exclude=%s/test/extern %s/test/*.cpp  %s/test/*.h", astylerc, root, root, root)
+        os.executef("astyle --options=%s --recursive --exclude=%s/test/extern/**  %s/*.cpp  %s/*.h", astylerc, dir, dir, dir)
+        os.executef("astyle --options=%s  --recursive --exclude=%s/test/extern/** %s/test/*.cpp  %s/test/*.h", astylerc, root, root, root)
         
         local olicense = string.format("extensions: .h .cpp .cc .hpp\n/**\n * %s\n */", zpm.util.readAll(path.join(zpm.env.getScriptPath(), "templates/mit.tmpl")):gsub("${years}", "%%CurrentYear%%"):gsub("${owner}", "Zefiros Software"):gsub("\n", "\n * "))
         local license = ""
