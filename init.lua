@@ -200,12 +200,10 @@ function zefiros.setDefaults( name, options )
             name .. "/**.licenseheader"
             }
             
-        if options.mayCompile then
-            filter "not HeaderOnly*"           
-                files { 
-                    name .. "/src/**.cpp"
-                    }
-        end 
+        filter "not HeaderOnly*"           
+            files { 
+                name .. "/src/**.cpp"
+                }
 
         filter {}
 
