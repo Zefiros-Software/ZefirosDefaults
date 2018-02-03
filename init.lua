@@ -58,7 +58,7 @@ function zefiros.setDefaults( name, options )
 
     local config = { "Release", "Debug", "OptDebug" }
     local lconf = {}
-    if options.headerOnly ~= nil and options.headerOnly then
+    if options.headerOnly then
 
         for _, c in ipairs( config ) do
             lconf = zpm.util.concat( lconf, {string.format( "HeaderOnly%s", c )} )
@@ -200,10 +200,12 @@ function zefiros.setDefaults( name, options )
             name .. "/**.licenseheader"
             }
             
-        filter "not HeaderOnly*"           
-            files { 
-			    name .. "/src/**.cpp"
-                }
+        if options.mayCompile then
+            filter "not HeaderOnly*"           
+                files { 
+                    name .. "/src/**.cpp"
+                    }
+        end 
 
         filter {}
 
