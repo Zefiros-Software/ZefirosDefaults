@@ -199,6 +199,13 @@ function zefiros.setDefaults( name, options )
             name .. "/include/**.h",
             name .. "/**.licenseheader"
             }
+
+        if not options.mayLink then
+            zpm.util.writeAll(path.join(_MAIN_SCRIPT_DIR, "extern/dummy.cpp"), "void dummy() {}")
+            files {
+                "extern/dummy.cpp"
+            }
+        end
             
         filter "not HeaderOnly*"           
             files { 
