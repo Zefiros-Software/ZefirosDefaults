@@ -566,7 +566,7 @@ zpm.newaction {
         zpm.util.writeAll(astylerc, zpm.util.readAll(path.join(zpm.env.getScriptPath(), "templates/.astylerc")))
         local dir = path.join(root, zefiros.env.projectDirectory())
         os.executef("astyle --options=%s --recursive -i --exclude=\"extern\"  \"%s/*.cpp\"  \"%s/*.h\"", astylerc, dir, dir)
-        os.executef("astyle --options=%s  --recursive -i --exclude=\"test/extern\" \"%s/test/*.cpp\"  \"%s/test/*.h\"", astylerc, root, root)
+        os.executef("astyle --options=%s  --recursive -i --exclude=\"test/extern\" \"%stest/*.cpp\"  \"%stest/*.h\"", astylerc, root, root)
         
         local olicense = string.format("extensions: .h .cpp .cc .hpp\n/**\n * %s\n */", zpm.util.readAll(path.join(zpm.env.getScriptPath(), "templates/mit.tmpl")):gsub("${years}", "%%CurrentYear%%"):gsub("${owner}", "Zefiros Software"):gsub("\n", "\n * "))
         local license = ""
