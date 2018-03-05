@@ -611,6 +611,9 @@ zpm.newaction {
     description = "Build this library with a default structure",
     execute = function()
 
+        os.fexecutef("g++ --version")
+        os.fexecutef("clang --version")
+
         os.fexecutef("zpm run build-ci --verbose --skip-lock %s %s --build_configuration=%s", zefiros.env.project(), zefiros.env.projectDirectory(), zefiros.env.buildConfig())
         os.fexecutef("zpm run test-ci --verbose %s %s --build_configuration=%s", zefiros.env.project(), zefiros.env.projectDirectory(), zefiros.env.buildConfig())
 
