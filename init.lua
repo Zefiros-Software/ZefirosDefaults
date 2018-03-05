@@ -422,6 +422,10 @@ zpm.newaction {
                 os.fexecutef("msbuild %s/%s.sln /m /property:Configuration=%s /property:Platform=%s", zefiros.env.projectDirectory(), zefiros.env.project(), zefiros.env.buildConfig(), zefiros.env.platform())
             end
         else
+            
+            os.fexecutef("g++ --version")
+            os.fexecutef("clang --version")
+            
             if zefiros.isZpmBuild() then
 
                 local current = os.getcwd()
@@ -610,10 +614,6 @@ zpm.newaction {
     trigger = "build-ci-library",
     description = "Build this library with a default structure",
     execute = function()
-
-        os.fexecutef("g++ --version")
-        os.fexecutef("clang --version")
-
         os.fexecutef("zpm run build-ci --verbose --skip-lock %s %s --build_configuration=%s", zefiros.env.project(), zefiros.env.projectDirectory(), zefiros.env.buildConfig())
         os.fexecutef("zpm run test-ci --verbose %s %s --build_configuration=%s", zefiros.env.project(), zefiros.env.projectDirectory(), zefiros.env.buildConfig())
 
