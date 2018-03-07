@@ -431,7 +431,7 @@ zpm.newaction {
             
                 os.chdir(path.join(_MAIN_SCRIPT_DIR, "test/zpm"))
 
-                os.fexecutef("make verbose=1")
+                os.fexecutef("make verbose=1 %s", iif(os.ishost("linux"), "AR=gcc-ar", ""))
 
                 os.chdir(current)
             else
@@ -442,7 +442,7 @@ zpm.newaction {
                 local current = os.getcwd()
                 os.chdir(path.join(_MAIN_SCRIPT_DIR, zefiros.env.projectDirectory()))
 
-                os.fexecutef("make config=%s_%s verbose=1", zefiros.env.buildConfig(), zefiros.env.architecture())
+                os.fexecutef("make config=%s_%s verbose=1  %s", zefiros.env.buildConfig(), zefiros.env.architecture(), iif(os.ishost("linux"), "AR=gcc-ar", ""))
 
                 os.chdir(current)
             end
@@ -473,11 +473,13 @@ zpm.newaction {
 
             os.fexecutef("msbuild %s.sln /m /property:Configuration=Test /property:Platform=Win32", zefiros.env.project())
             os.fexecutef("bin\\Test\\%s.exe", zefiros.env.project())
-        else
+        else            
+            os.fexecutef("g++ --version")
+            os.fexecutef("clang --version")
 
             os.executef("zpm gmake --skip-lock --verbose")   
 
-            os.fexecutef("make verbose=1")
+            os.fexecutef("make verbose=1 %s", iif(os.ishost("linux"), "AR=gcc-ar", ""))
             os.fexecutef("./bin/Test/%s", zefiros.env.project())
         end
     end
