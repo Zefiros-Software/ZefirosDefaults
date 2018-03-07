@@ -436,7 +436,7 @@ zpm.newaction {
             
                 os.chdir(path.join(_MAIN_SCRIPT_DIR, "test/zpm"))
 
-                os.fexecutef("make")
+                os.fexecutef("make verbose=1")
 
                 os.chdir(current)
             else
@@ -447,7 +447,7 @@ zpm.newaction {
                 local current = os.getcwd()
                 os.chdir(path.join(_MAIN_SCRIPT_DIR, zefiros.env.projectDirectory()))
 
-                os.fexecutef("make config=%s_%s", zefiros.env.buildConfig(), zefiros.env.architecture())
+                os.fexecutef("make config=%s_%s verbose=1", zefiros.env.buildConfig(), zefiros.env.architecture())
 
                 os.chdir(current)
             end
@@ -482,7 +482,7 @@ zpm.newaction {
 
             os.executef("zpm gmake --skip-lock --verbose")   
 
-            os.fexecutef("make")
+            os.fexecutef("make verbose=1")
             os.fexecutef("./bin/Test/%s", zefiros.env.project())
         end
     end
