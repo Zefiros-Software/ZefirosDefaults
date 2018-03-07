@@ -431,7 +431,7 @@ zpm.newaction {
             
                 os.chdir(path.join(_MAIN_SCRIPT_DIR, "test/zpm"))
 
-                os.fexecutef("make verbose=1 %s", iif(os.istarget("linux"), "AR=gcc-ar", ""))
+                os.fexecutef("make %s", iif(os.istarget("linux"), "AR=gcc-ar", ""))
 
                 os.chdir(current)
             else
@@ -442,7 +442,7 @@ zpm.newaction {
                 local current = os.getcwd()
                 os.chdir(path.join(_MAIN_SCRIPT_DIR, zefiros.env.projectDirectory()))
 
-                os.fexecutef("make config=%s_%s verbose=1  %s", zefiros.env.buildConfig(), zefiros.env.architecture(), iif(os.istarget("linux"), "AR=gcc-ar", ""))
+                os.fexecutef("make config=%s_%s  %s", zefiros.env.buildConfig(), zefiros.env.architecture(), iif(os.istarget("linux"), "AR=gcc-ar", ""))
 
                 os.chdir(current)
             end
@@ -479,7 +479,7 @@ zpm.newaction {
 
             os.executef("zpm gmake --skip-lock --verbose")   
 
-            os.fexecutef("make verbose=1 %s", iif(os.istarget("linux"), "AR=gcc-ar", ""))
+            os.fexecutef("make %s", iif(os.istarget("linux"), "AR=gcc-ar", ""))
             os.fexecutef("./bin/Test/%s", zefiros.env.project())
         end
     end
