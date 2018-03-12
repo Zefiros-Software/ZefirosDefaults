@@ -670,13 +670,14 @@ function zefiros.onLoad()
             gccVersion = "6"
         end
 
-        if os.ishost("macosx") then
+        if os.ishost("macosx") and not zpm.loader.config('install.module.zefiros-software.clang')) then
+            zpm.loader.config:set('install.module.zefiros-software.clang', "installed", true)
             os.execute("brew install --with-clang llvm")
-            os.execute("echo 'export PATH=\"/usr/local/opt/llvm/bin:$PATH\"' >> ~/.bash_profile")
+            os.execute("echo 'export PATH=\"/usr/local/opt/llvm/bin:$PATH\"' >> ~/.bash_profile && source ~/.bash_profile")
         end
 
-        if os.ishost("linux") and not zpm.loader.config(('install.module.zefiros-software.miniconda.gcc-%s'):format(gccVersion)) then 
-            zpm.loader.config:set(('install.module.zefiros-software.miniconda.gcc-%s'):format(gccVersion), "installed", true)
+        if os.ishost("linux") and not zpm.loader.config(('install.module.zefiros-software.gcc-%s'):format(gccVersion)) then 
+            zpm.loader.config:set(('install.module.zefiros-software.gcc-%s'):format(gccVersion), "installed", true)
             os.execute("sudo add-apt-repository ppa:ubuntu-toolchain-r/test -y")
             os.execute("sudo apt-get -qq update -y")
         
