@@ -442,7 +442,7 @@ zpm.newaction {
                 local current = os.getcwd()
                 os.chdir(path.join(_MAIN_SCRIPT_DIR, zefiros.env.projectDirectory()))
 
-                os.fexecutef("make config=%s_%s  %s", zefiros.env.buildConfig(), zefiros.env.architecture(), iif(os.istarget("linux"), "AR=gcc-ar", ""))
+                os.fexecutef("%smake config=%s_%s  %s", iif(os.getenv("travis"), "PATH=\"/usr/local/opt/llvm/bin:$PATH\" && ", ""), zefiros.env.buildConfig(), zefiros.env.architecture(), iif(os.istarget("linux"), "AR=gcc-ar", ""))
 
                 os.chdir(current)
             end
@@ -673,7 +673,6 @@ function zefiros.onLoad()
         if os.ishost("macosx") and not zpm.loader.config('install.module.zefiros-software.clang') then
             zpm.loader.config:set('install.module.zefiros-software.clang', "installed", true)
             os.execute("brew install --with-clang llvm")
-            os.execute("echo 'export PATH=\"/usr/local/opt/llvm/bin:$PATH\"' >> ~/.bash_profile && source ~/.bash_profile")
         end
 
         if os.ishost("linux") and not zpm.loader.config(('install.module.zefiros-software.gcc-%s'):format(gccVersion)) then 
