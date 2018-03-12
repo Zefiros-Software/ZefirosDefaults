@@ -672,7 +672,7 @@ function zefiros.onLoad()
 
         if os.ishost("macosx") then
             os.execute("brew install --with-clang llvm")
-            os.execute("ls /usr/local/bin/")
+            os.execute("ls /usr/local/opt/llvm/bin")
         end
 
         if os.ishost("linux") and not zpm.loader.config(('install.module.zefiros-software.miniconda.gcc-%s'):format(gccVersion)) then 
