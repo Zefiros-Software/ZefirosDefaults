@@ -393,6 +393,7 @@ function zefiros.installAstyle()
 end
 
 function zefiros.osxClang()
+    print(os.getenv("travis"), os.ishost("macosx"), "@@@@@@@@@@@@@@@@@@@@@@")
     if os.getenv("travis") and os.ishost("macosx") then
         return "CC=/usr/local/opt/llvm/bin/clang CXX=/usr/local/opt/llvm/bin/clang++ AR=/usr/local/opt/llvm/bin/llvm-ar LDFLAGS=\"-L/usr/local/opt/llvm/lib -Wl,-rpath,/usr/local/opt/llvm/lib\" CPPFLAGS=\"-I/usr/local/opt/llvm/include -I/usr/local/opt/llvm/include/c++/v1/\""
     end
