@@ -670,7 +670,7 @@ function zefiros.onLoad()
             gccVersion = "6"
         end
 
-        if os.ishost("macosx") and not zpm.loader.config('install.module.zefiros-software.clang')) then
+        if os.ishost("macosx") and not zpm.loader.config('install.module.zefiros-software.clang') then
             zpm.loader.config:set('install.module.zefiros-software.clang', "installed", true)
             os.execute("brew install --with-clang llvm")
             os.execute("echo 'export PATH=\"/usr/local/opt/llvm/bin:$PATH\"' >> ~/.bash_profile && source ~/.bash_profile")
