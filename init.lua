@@ -393,7 +393,7 @@ function zefiros.installAstyle()
 end
 
 function zefiros.osxClang()
-    if os.getenv("travis") and os.istarget("macosx") then
+    if os.getenv("travis") and os.ishost("macosx") then
         return "CC=/usr/local/opt/llvm/bin/clang CXX=/usr/local/opt/llvm/bin/clang++ AR=/usr/local/opt/llvm/bin/llvm-ar LDFLAGS=\"-L/usr/local/opt/llvm/lib -Wl,-rpath,/usr/local/opt/llvm/lib\" CPPFLAGS=\"-I/usr/local/opt/llvm/include -I/usr/local/opt/llvm/include/c++/v1/\""
     end
     return ""
@@ -438,7 +438,7 @@ zpm.newaction {
             
                 os.chdir(path.join(_MAIN_SCRIPT_DIR, "test/zpm"))
 
-                os.fexecutef("make %s %s", iif(os.istarget("linux"), "AR=gcc-ar", ""), zefiros.osxClang())
+                os.fexecutef("make %s %s", iif(os.ishost("linux"), "AR=gcc-ar", ""), zefiros.osxClang())
 
                 os.chdir(current)
             else
@@ -449,7 +449,7 @@ zpm.newaction {
                 local current = os.getcwd()
                 os.chdir(path.join(_MAIN_SCRIPT_DIR, zefiros.env.projectDirectory()))
 
-                os.fexecutef("make config=%s_%s %s %s", zefiros.env.buildConfig(), zefiros.env.architecture(), iif(os.istarget("linux"), "AR=gcc-ar", ""), zefiros.osxClang())
+                os.fexecutef("make config=%s_%s %s %s", zefiros.env.buildConfig(), zefiros.env.architecture(), iif(os.ishost("linux"), "AR=gcc-ar", ""), zefiros.osxClang())
 
                 os.chdir(current)
             end
@@ -486,7 +486,7 @@ zpm.newaction {
 
             os.executef("zpm gmake --skip-lock --verbose")   
 
-            os.fexecutef("make %s %s", iif(os.istarget("linux"), "AR=gcc-ar", ""), zefiros.osxClang())
+            os.fexecutef("make %s %s", iif(os.ishost("linux"), "AR=gcc-ar", ""), zefiros.osxClang())
             os.fexecutef("./bin/Test/%s", zefiros.env.project())
         end
     end
