@@ -443,7 +443,7 @@ zpm.newaction {
                 os.chdir(path.join(_MAIN_SCRIPT_DIR, zefiros.env.projectDirectory()))
 
                 local osx_clang = iif(os.getenv("travis") and os.istarget("macosx"), "CC=/usr/local/opt/llvm/bin/clang CXX=/usr/local/opt/llvm/bin/clang++ AR=/usr/local/opt/llvm/bin/clang-ar LDFLAGS=\"-L/usr/local/opt/llvm/lib -Wl,-rpath,/usr/local/opt/llvm/lib\" CPPFLAGS =\"-I/usr/local/opt/llvm/include -I/usr/local/opt/llvm/include/c++/v1/\"", "")
-                os.fexecutef("make config=%s_%s %s %s --verbose", zefiros.env.buildConfig(), zefiros.env.architecture(), iif(os.istarget("linux"), "AR=gcc-ar", ""), osx_clang)
+                os.fexecutef("make config=%s_%s %s %s verbose=1", zefiros.env.buildConfig(), zefiros.env.architecture(), iif(os.istarget("linux"), "AR=gcc-ar", ""), osx_clang)
 
                 os.chdir(current)
             end
