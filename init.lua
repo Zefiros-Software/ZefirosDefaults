@@ -394,7 +394,7 @@ end
 
 function zefiros.osxClang()
     if os.getenv("TRAVIS") and os.ishost("macosx") then
-        return "CC=/usr/local/opt/llvm/bin/clang CXX=/usr/local/opt/llvm/bin/clang++ AR=/usr/local/opt/llvm/bin/llvm-ar ld=/usr/local/opt/llvm/bin/llvm-ld LDFLAGS=\"-L/usr/local/opt/llvm/lib -Wl,-rpath,/usr/local/opt/llvm/lib\" CPPFLAGS=\"-I/usr/local/opt/llvm/include -I/usr/local/opt/llvm/include/c++/v1/\""
+        return "CC=/usr/local/opt/llvm/bin/clang CXX=/usr/local/opt/llvm/bin/clang++ AR=/usr/local/opt/llvm/bin/llvm-ar LD=/usr/local/opt/llvm/bin/llvm-ld LDFLAGS=\"-L/usr/local/opt/llvm/lib -Wl,-rpath,/usr/local/opt/llvm/lib\" CPPFLAGS=\"-I/usr/local/opt/llvm/include -I/usr/local/opt/llvm/include/c++/v1/\""
     end
     return ""
 end
