@@ -442,7 +442,8 @@ zpm.newaction {
                 local current = os.getcwd()
                 os.chdir(path.join(_MAIN_SCRIPT_DIR, zefiros.env.projectDirectory()))
 
-                os.fexecutef("%smake config=%s_%s  %s", iif(os.getenv("travis"), "PATH=\"/usr/local/opt/llvm/bin:$PATH\" && ", ""), zefiros.env.buildConfig(), zefiros.env.architecture(), iif(os.istarget("linux"), "AR=gcc-ar", ""))
+                local osx_clang = iif(os.getenv("travis") and os.istarget("macosx"), "CC=/usr/local/opt/llvm/bin/clang CXX=/usr/local/opt/llvm/bin/clang++ AR=/usr/local/opt/llvm/bin/clang-ar LDFLAGS=\"-L/usr/local/opt/llvm/lib -Wl,-rpath,/usr/local/opt/llvm/lib\" CPPFLAGS =\"-I/usr/local/opt/llvm/include -I/usr/local/opt/llvm/include/c++/v1/\"", "")
+                os.fexecutef("make config=%s_%s %s %", zefiros.env.buildConfig(), zefiros.env.architecture(), iif(os.istarget("linux"), "AR=gcc-ar", ""), osx_clang)
 
                 os.chdir(current)
             end
