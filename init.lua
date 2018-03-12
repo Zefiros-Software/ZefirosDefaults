@@ -393,9 +393,8 @@ function zefiros.installAstyle()
 end
 
 function zefiros.osxClang()
-    print(os.getenv("TRAVIS"), os.ishost("macosx"), "@@@@@@@@@@@@@@@@@@@@@@")
     if os.getenv("TRAVIS") and os.ishost("macosx") then
-        return "CC=/usr/local/opt/llvm/bin/clang CXX=/usr/local/opt/llvm/bin/clang++ AR=/usr/local/opt/llvm/bin/llvm-ar LDFLAGS=\"-L/usr/local/opt/llvm/lib -Wl,-rpath,/usr/local/opt/llvm/lib\" CPPFLAGS=\"-I/usr/local/opt/llvm/include -I/usr/local/opt/llvm/include/c++/v1/\""
+        return "CC=/usr/local/opt/llvm/bin/clang CXX=/usr/local/opt/llvm/bin/clang++ AR=/usr/local/opt/llvm/bin/llvm-ar ld=/usr/local/opt/llvm/bin/llvm-ld LDFLAGS=\"-L/usr/local/opt/llvm/lib -Wl,-rpath,/usr/local/opt/llvm/lib\" CPPFLAGS=\"-I/usr/local/opt/llvm/include -I/usr/local/opt/llvm/include/c++/v1/\""
     end
     return ""
 end
@@ -680,7 +679,7 @@ function zefiros.onLoad()
 
         if os.ishost("macosx") and not zpm.loader.config('install.module.zefiros-software.clang') then
             zpm.loader.config:set('install.module.zefiros-software.clang', "installed", true)
-            os.execute("brew install --with-clang llvm")
+            os.execute("brew install llvm")
         end
 
         if os.ishost("linux") and not zpm.loader.config(('install.module.zefiros-software.gcc-%s'):format(gccVersion)) then 
