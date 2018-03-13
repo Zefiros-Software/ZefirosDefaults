@@ -69,10 +69,10 @@ function zefiros.setDefaults( name, options )
 
     platforms { "x86_64", "x86" }
     startproject( name .. "-test" )
-	location( name )
-	objdir "bin/obj/"
+    location( name )
+    objdir "bin/obj/"
 
-	vectorextensions "SSE2"
+    vectorextensions "SSE2"
     warnings "Extra"
     
     flags "MultiProcessorCompile"
@@ -108,7 +108,7 @@ function zefiros.setDefaults( name, options )
         optimize "Speed"
         flags "LinkTimeOptimization"
         defines "NDEBUG"
-	
+
     filter "Coverage" 
         targetsuffix "cd"
         links "gcov"
@@ -127,26 +127,26 @@ function zefiros.setDefaults( name, options )
     if os.isfile( licenseheader ) and os.isdir( "test" ) then
         os.copyfile( licenseheader, path.join("test", name .. ".licenseheader") )
     end 
-			
-	project( name .. "-test" )
-				
-		kind "ConsoleApp"		
-		location "test/"
+            
+    project( name .. "-test" )
+                
+        kind "ConsoleApp"		
+        location "test/"
         
         zpm.uses {
-			"Zefiros-Software/GoogleTest"
-		}
-		
-		includedirs {			
-			name .. "/include/",
-			"test/"
-			}	
-		
-		files { 
-			"test/**.h",
-			"test/**.cpp",
+            "Zefiros-Software/GoogleTest"
+        }
+        
+        includedirs {			
+            name .. "/include/",
+            "test/"
+            }	
+        
+        files { 
+            "test/**.h",
+            "test/**.cpp",
             "test/**.licenseheader"
-			}
+            }
 
         excludes { 
             "test/extern/**",
@@ -180,15 +180,15 @@ function zefiros.setDefaults( name, options )
             defines "PREFIX=X_"
 
         filter {}
-			
-	project( name )
-		targetname( name )
+            
+    project( name )
+        targetname( name )
         kind "StaticLib"     
                 
-		includedirs {
-			name .. "/include/"
-			}				
-		     
+        includedirs {
+            name .. "/include/"
+            }				
+             
         files { 
             name .. "/include/**.hpp",
             name .. "/include/**.h",
@@ -263,8 +263,8 @@ function zefiros.setTestZPMDefaults( name, options )
     platforms { "x86_64" }
 
     startproject( name .. "-zpm-test" )
-	location "zpm"
-	objdir "bin/obj/"
+    location "zpm"
+    objdir "bin/obj/"
 
     optimize "Speed"
     warnings "Extra"
@@ -280,19 +280,19 @@ function zefiros.setTestZPMDefaults( name, options )
         architecture "x86_64"
 
     filter {}
-			
-	project( name .. "-zpm-test" )
-				
-		kind "ConsoleApp"
+            
+    project( name .. "-zpm-test" )
+                
+        kind "ConsoleApp"
         
         zpm.uses "Zefiros-Software/GoogleTest"
-		
-		includedirs "./"
-		
-		files { 
-			"**.h",
-			"**.cpp"
-			}
+        
+        includedirs "./"
+        
+        files { 
+            "**.h",
+            "**.cpp"
+            }
 
         excludes { 
             "extern/**",
