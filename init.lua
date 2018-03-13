@@ -210,6 +210,42 @@ function zefiros.setDefaults( name, options )
         filter {}
 
 
+    if os.isdir( "app" ) then
+
+        if os.isfile( licenseheader ) then
+            os.copyfile( licenseheader, path.join("app", name .. ".licenseheader") )
+        end
+    
+        project( name .. "-app" )
+                    
+            kind "ConsoleApp"            
+            location "app"
+            
+            includedirs {			
+                name .. "/include/",
+                "app/"
+                }	
+            
+            files { 
+                "app/**.h",
+                "app/**.cpp",
+                "app/**.licenseheader"
+                }
+
+            excludes { 
+                "app/extern/**",
+                "app/assets/**"
+            }
+                        
+            filter "not HeaderOnly*"
+                if options.mayLink then
+                    links( name )
+                end
+        
+            filter {}
+    end
+
+
     if os.isdir( "bench" ) then
 
         if os.isfile( licenseheader ) then
