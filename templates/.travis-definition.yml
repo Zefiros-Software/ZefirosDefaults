@@ -8,9 +8,6 @@ matrix:
     - os: linux
       dist: trusty
       env: VERSION=7
-    - os: linux
-      dist: trusty
-      env: VERSION=5
     - os: osx
       osx_image: xcode8
       language: generic
