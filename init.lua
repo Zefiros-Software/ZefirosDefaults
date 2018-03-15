@@ -102,7 +102,6 @@ function zefiros.setDefaults( name, options )
     filter "*OptDebug"
         targetsuffix "od"
         flags "LinkTimeOptimization"
-        symbols "On"
         optimize "Speed"
 
     filter "*Release"        
