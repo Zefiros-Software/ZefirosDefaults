@@ -340,17 +340,42 @@ function zefiros.setTestZPMDefaults( name, options )
     workspace()
 end
 
-function zefiros.env.vsversion()
+zefiros.env._conf = {}
+function zefiros.env.config()
+    if #zefiros.env._conf == 0 then
+        local yml = zpm.ser.loadFile(path.join(_MAIN_SCRIPT_DIR, '.travis.yml'))
+        local env = zpm.util.indexTable(yml, {'global', 'env'})
+        for _, kv in ipairs(env) do
+            kv = zpm.util.split(kv, '=')
+            zefiros.env._conf[kv[1]] = kv[2]
+        end        
+    end
+    return zefiros.env._conf
+end
 
+function zefiros.env.vsversion()
     return os.getenv("VS_VERSION", "vs2015")
 end
 
 function zefiros.env.buildConfig()
-    if _OPTIONS['build_configuration'] then
-        return _OPTIONS['build_configuration']
+    if _OPTIONS['build-configuration'] then
+        return _OPTIONS['build-configuration']
     end
 
     return os.getenv("BUILD_CONFIG", "debug")
+end
+
+function zefiros.env.templateType(prepend)
+
+    local val = iif(_OPTIONS['ci-type'], _OPTIONS['ci-type'], '')
+    local conf = zefiros.env.config()
+    if conf['PROJECT_TEMPLATE'] then
+        val = conf['PROJECT_TEMPLATE']
+    end
+    if val and prepend then
+        val = '-' .. val
+    end
+    return iif(val ~= '-default', val, '')
 end
 
 function zefiros.env.architecture()
@@ -360,6 +385,11 @@ end
 
 function zefiros.env.project()
 
+    local conf = zefiros.env.config()
+    if conf['PROJECT'] then
+        return conf['PROJECT']
+    end
+
     if _ARGS[1] then
         return _ARGS[1]
     end
@@ -367,6 +397,11 @@ function zefiros.env.project()
 end
 
 function zefiros.env.projectDirectory()
+
+    local conf = zefiros.env.config()
+    if conf['PROJECT_DIRECTORY'] then
+        return conf['PROJECT_DIRECTORY']
+    end
 
     if _ARGS[2] then
         return _ARGS[2]
@@ -494,7 +529,7 @@ zpm.newaction {
 }
 
 zpm.newoption {
-    trigger = "build_configuration",
+    trigger = "build-configuration",
     description = "Sets the kind of build you want to perform",
     value = "TYPE",
     allowed = {
@@ -579,9 +614,9 @@ zpm.newaction {
     description = "Update the ci configuration for this library",
     execute = function()
 
-        local appveyor = zpm.util.readAll(path.join(zpm.env.getScriptPath(), "templates/.appveyor.yml")):gsub("{{PROJECT_NAME}}", zefiros.env.project()):gsub("{{PROJECT_DIRECTORY}}", zefiros.env.projectDirectory())
+        local appveyor = zpm.util.readAll(path.join(zpm.env.getScriptPath(), ("templates/.appveyor%s.yml"):format(zefiros.env.templateType(true)))):gsub("{{PROJECT_NAME}}", zefiros.env.project()):gsub("{{PROJECT_DIRECTORY}}", zefiros.env.projectDirectory()):gsub("{{PROJECT_TEMPLATE}}", zefiros.env.templateType())
         zpm.util.writeAll(path.join(_MAIN_SCRIPT_DIR, ".appveyor.yml"), appveyor)
-        local travis = zpm.util.readAll(path.join(zpm.env.getScriptPath(), "templates/.travis.yml")):gsub("{{PROJECT_NAME}}", zefiros.env.project()):gsub("{{PROJECT_DIRECTORY}}", zefiros.env.projectDirectory())
+        local travis = zpm.util.readAll(path.join(zpm.env.getScriptPath(), ("templates/.travis%s.yml"):format(zefiros.env.templateType(true)))):gsub("{{PROJECT_NAME}}", zefiros.env.project()):gsub("{{PROJECT_DIRECTORY}}", zefiros.env.projectDirectory()):gsub("{{PROJECT_TEMPLATE}}", zefiros.env.templateType())
         zpm.util.writeAll(path.join(_MAIN_SCRIPT_DIR, ".travis.yml"), travis)
 
         if os.getenv("SLACK_TRAVIS_TOKEN") then
@@ -632,9 +667,9 @@ zpm.newaction {
     execute = function()
 
         local root = path.join(_MAIN_SCRIPT_DIR, '../')
-        local appveyor = zpm.util.readAll(path.join(zpm.env.getScriptPath(), "templates/.appveyor-definition.yml")):gsub("{{PROJECT_NAME}}", zefiros.env.project())
+        local appveyor = zpm.util.readAll(path.join(zpm.env.getScriptPath(), ("templates/.appveyor-definition%s.yml"):format(zefiros.env.templateType(true)))):gsub("{{PROJECT_NAME}}", zefiros.env.project()):gsub("{{PROJECT_DIRECTORY}}", zefiros.env.projectDirectory()):gsub("{{PROJECT_TEMPLATE}}", zefiros.env.templateType())
         zpm.util.writeAll(path.join(root, ".appveyor.yml"), appveyor)
-        local travis = zpm.util.readAll(path.join(zpm.env.getScriptPath(), "templates/.travis-definition.yml")):gsub("{{PROJECT_NAME}}", zefiros.env.project())
+        local travis = zpm.util.readAll(path.join(zpm.env.getScriptPath(), ("templates/.travis-definition%s.yml"):format(zefiros.env.templateType(true)))):gsub("{{PROJECT_NAME}}", zefiros.env.project()):gsub("{{PROJECT_DIRECTORY}}", zefiros.env.projectDirectory()):gsub("{{PROJECT_TEMPLATE}}", zefiros.env.templateType())
         zpm.util.writeAll(path.join(root, ".travis.yml"), travis)
 
         if os.getenv("SLACK_TRAVIS_TOKEN") then
@@ -654,8 +689,8 @@ zpm.newaction {
     trigger = "build-ci-library",
     description = "Build this library with a default structure",
     execute = function()
-        os.fexecutef("zpm run build-ci --verbose --skip-lock %s %s --build_configuration=%s", zefiros.env.project(), zefiros.env.projectDirectory(), zefiros.env.buildConfig())
-        os.fexecutef("zpm run test-ci --verbose %s %s --build_configuration=%s", zefiros.env.project(), zefiros.env.projectDirectory(), zefiros.env.buildConfig())
+        os.fexecutef("zpm run build-ci --verbose --skip-lock %s %s --build-configuration=%s", zefiros.env.project(), zefiros.env.projectDirectory(), zefiros.env.buildConfig())
+        os.fexecutef("zpm run test-ci --verbose %s %s --build-configuration=%s", zefiros.env.project(), zefiros.env.projectDirectory(), zefiros.env.buildConfig())
 
     end
 }
@@ -665,11 +700,25 @@ zpm.newaction {
     description = "Build this library with a default structure",
     execute = function()
 
-        os.fexecutef("zpm run build-ci --verbose %s %s --build_configuration=%s", zefiros.env.project(), zefiros.env.projectDirectory(), zefiros.env.buildConfig())
-        os.fexecutef("zpm run test-ci --verbose %s %s --build_configuration=%s", zefiros.env.project(), zefiros.env.projectDirectory(), zefiros.env.buildConfig())
+        os.fexecutef("zpm run build-ci --verbose %s %s --build-configuration=%s", zefiros.env.project(), zefiros.env.projectDirectory(), zefiros.env.buildConfig())
+        os.fexecutef("zpm run test-ci --verbose %s %s --build-configuration=%s", zefiros.env.project(), zefiros.env.projectDirectory(), zefiros.env.buildConfig())
 
     end
 }
+
+
+
+zpm.newoption {
+    trigger = "ci-type",
+    description = "Sets the ci build type",
+    default     = "default",
+    value = "TYPE",
+    allowed = {
+        { "default", "Loads a c++14 environment."},
+        { "latest", "Support only the latest c++ standard."}
+     }
+}
+
 
 zpm.newaction {
     trigger = "test-ci",

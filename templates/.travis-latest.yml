@@ -41,30 +41,13 @@ matrix:
   - os: linux
     dist: trusty
     env:
-    - BUILD_CONFIG=release
-    - BUILD_ARCHITECTURE=x86_64
-    - GCC_VERSION=6
-  - os: linux
-    dist: trusty
-    env:
-    - BUILD_CONFIG=debug
-    - BUILD_ARCHITECTURE=x86_64
-    - GCC_VERSION=6
-  - os: linux
-    dist: trusty
-    env:
-    - BUILD_CONFIG=release
-    - BUILD_ARCHITECTURE=x86
-    - GCC_VERSION=6
-  - os: linux
-    dist: trusty
-    env:
     - BUILD_CONFIG=zpm
-    - GCC_VERSION=6
+    - GCC_VERSION=7
 global:
   env:
   - PROJECT={{PROJECT_NAME}}
   - PROJECT_DIRECTORY={{PROJECT_DIRECTORY}}
+  - PROJECT_TEMPLATE={{PROJECT_TEMPLATE}}
 install:
   - source /dev/stdin <<< "$(curl -s https://raw.githubusercontent.com/Zefiros-Software/ZPM/features/refactor/script/install-zpm.sh)"
 script:
