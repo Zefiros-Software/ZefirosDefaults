@@ -49,7 +49,7 @@ global:
   - PROJECT_DIRECTORY={{PROJECT_DIRECTORY}}
   - PROJECT_TEMPLATE={{PROJECT_TEMPLATE}}
 install:
-  - source /dev/stdin <<< "$(curl -s https://raw.githubusercontent.com/Zefiros-Software/ZPM/features/refactor/script/install-zpm.sh)"
+  - source /dev/stdin <<< "$(curl -s https://raw.githubusercontent.com/Zefiros-Software/ZPM/dev/script/install-zpm.sh)"
 script:
   - zpm run build-ci-library
 after_success:
