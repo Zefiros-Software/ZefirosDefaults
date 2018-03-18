@@ -344,11 +344,16 @@ zefiros.env._conf = {}
 function zefiros.env.config()
     if #zefiros.env._conf == 0 then
         local yml = zpm.ser.loadFile(path.join(_MAIN_SCRIPT_DIR, '.travis.yml'))
+        if not yml then
+            yml = zpm.ser.loadFile(path.join(_MAIN_SCRIPT_DIR, '../.travis.yml'))
+        end
         local env = zpm.util.indexTable(yml, {'global', 'env'})
-        for _, kv in ipairs(env) do
-            kv = zpm.util.split(kv, '=')
-            zefiros.env._conf[kv[1]] = kv[2]
-        end        
+        if env then
+            for _, kv in ipairs(env) do
+                kv = zpm.util.split(kv, '=')
+                zefiros.env._conf[kv[1]] = kv[2]
+            end        
+        end
     end
     return zefiros.env._conf
 end
@@ -614,9 +619,9 @@ zpm.newaction {
     description = "Update the ci configuration for this library",
     execute = function()
 
-        local appveyor = zpm.util.readAll(path.join(zpm.env.getScriptPath(), ("templates/.appveyor%s.yml"):format(zefiros.env.templateType(true)))):gsub("{{PROJECT_NAME}}", zefiros.env.project()):gsub("{{PROJECT_DIRECTORY}}", zefiros.env.projectDirectory()):gsub("{{PROJECT_TEMPLATE}}", zefiros.env.templateType())
+        local appveyor = zpm.util.readAll(path.join(zpm.env.getScriptPath(), ("templates/.appveyor%s.yml"):format(zefiros.env.templateType(true)))):gsub("{{PROJECT_NAME}}", zefiros.env.project()):gsub("{{PROJECT_TEMPLATE}}", zefiros.env.templateType())
         zpm.util.writeAll(path.join(_MAIN_SCRIPT_DIR, ".appveyor.yml"), appveyor)
-        local travis = zpm.util.readAll(path.join(zpm.env.getScriptPath(), ("templates/.travis%s.yml"):format(zefiros.env.templateType(true)))):gsub("{{PROJECT_NAME}}", zefiros.env.project()):gsub("{{PROJECT_DIRECTORY}}", zefiros.env.projectDirectory()):gsub("{{PROJECT_TEMPLATE}}", zefiros.env.templateType())
+        local travis = zpm.util.readAll(path.join(zpm.env.getScriptPath(), ("templates/.travis%s.yml"):format(zefiros.env.templateType(true)))):gsub("{{PROJECT_NAME}}", zefiros.env.project()):gsub("{{PROJECT_TEMPLATE}}", zefiros.env.templateType())
         zpm.util.writeAll(path.join(_MAIN_SCRIPT_DIR, ".travis.yml"), travis)
 
         if os.getenv("SLACK_TRAVIS_TOKEN") then
