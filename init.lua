@@ -619,9 +619,9 @@ zpm.newaction {
     description = "Update the ci configuration for this library",
     execute = function()
 
-        local appveyor = zpm.util.readAll(path.join(zpm.env.getScriptPath(), ("templates/.appveyor%s.yml"):format(zefiros.env.templateType(true)))):gsub("{{PROJECT_NAME}}", zefiros.env.project()):gsub("{{PROJECT_TEMPLATE}}", zefiros.env.templateType())
+        local appveyor = zpm.util.readAll(path.join(zpm.env.getScriptPath(), ("templates/.appveyor%s.yml"):format(zefiros.env.templateType(true)))):gsub("{{PROJECT_DIRECTORY}}", zefiros.env.projectDirectory()):gsub("{{PROJECT_NAME}}", zefiros.env.project()):gsub("{{PROJECT_TEMPLATE}}", zefiros.env.templateType())
         zpm.util.writeAll(path.join(_MAIN_SCRIPT_DIR, ".appveyor.yml"), appveyor)
-        local travis = zpm.util.readAll(path.join(zpm.env.getScriptPath(), ("templates/.travis%s.yml"):format(zefiros.env.templateType(true)))):gsub("{{PROJECT_NAME}}", zefiros.env.project()):gsub("{{PROJECT_TEMPLATE}}", zefiros.env.templateType())
+        local travis = zpm.util.readAll(path.join(zpm.env.getScriptPath(), ("templates/.travis%s.yml"):format(zefiros.env.templateType(true)))):gsub("{{PROJECT_DIRECTORY}}", zefiros.env.projectDirectory()):gsub("{{PROJECT_NAME}}", zefiros.env.project()):gsub("{{PROJECT_TEMPLATE}}", zefiros.env.templateType())
         zpm.util.writeAll(path.join(_MAIN_SCRIPT_DIR, ".travis.yml"), travis)
 
         if os.getenv("SLACK_TRAVIS_TOKEN") then
@@ -672,9 +672,9 @@ zpm.newaction {
     execute = function()
 
         local root = path.join(_MAIN_SCRIPT_DIR, '../')
-        local appveyor = zpm.util.readAll(path.join(zpm.env.getScriptPath(), ("templates/.appveyor-definition%s.yml"):format(zefiros.env.templateType(true)))):gsub("{{PROJECT_NAME}}", zefiros.env.project()):gsub("{{PROJECT_DIRECTORY}}", zefiros.env.projectDirectory()):gsub("{{PROJECT_TEMPLATE}}", zefiros.env.templateType())
+        local appveyor = zpm.util.readAll(path.join(zpm.env.getScriptPath(), ("templates/.appveyor-definition%s.yml"):format(zefiros.env.templateType(true)))):gsub("{{PROJECT_NAME}}", zefiros.env.project()):gsub("{{PROJECT_TEMPLATE}}", zefiros.env.templateType())
         zpm.util.writeAll(path.join(root, ".appveyor.yml"), appveyor)
-        local travis = zpm.util.readAll(path.join(zpm.env.getScriptPath(), ("templates/.travis-definition%s.yml"):format(zefiros.env.templateType(true)))):gsub("{{PROJECT_NAME}}", zefiros.env.project()):gsub("{{PROJECT_DIRECTORY}}", zefiros.env.projectDirectory()):gsub("{{PROJECT_TEMPLATE}}", zefiros.env.templateType())
+        local travis = zpm.util.readAll(path.join(zpm.env.getScriptPath(), ("templates/.travis-definition%s.yml"):format(zefiros.env.templateType(true)))):gsub("{{PROJECT_NAME}}", zefiros.env.project()):gsub("{{PROJECT_TEMPLATE}}", zefiros.env.templateType())
         zpm.util.writeAll(path.join(root, ".travis.yml"), travis)
 
         if os.getenv("SLACK_TRAVIS_TOKEN") then
