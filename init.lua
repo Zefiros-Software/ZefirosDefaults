@@ -769,7 +769,7 @@ function zefiros.onLoad()
 
         if os.ishost("macosx") and not zpm.loader.config('install.module.zefiros-software.clang') then
             zpm.loader.config:set('install.module.zefiros-software.clang', "installed", true)
-            os.execute("brew install llvm")
+            os.execute("brew install --with-toolchain llvm")
         end
 
         if os.ishost("linux") and not zpm.loader.config(('install.module.zefiros-software.gcc-%s'):format(gccVersion)) then 
