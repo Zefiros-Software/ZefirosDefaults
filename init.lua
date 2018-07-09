@@ -31,6 +31,16 @@ function zefiros.testDefinition(name)
 
     configurations { "Test" }
 
+    platforms { "x86_64" }
+
+    filter "action:vs2017"
+        systemversion "latest"
+
+    filter "platforms:x86_64"
+        architecture "x86_64"
+        
+    startproject(name)
+
     project(name)
 
     kind "ConsoleApp"
@@ -76,6 +86,9 @@ function zefiros.setDefaults( name, options )
     warnings "Extra"
     
     flags "MultiProcessorCompile"
+
+    filter "action:vs2017"
+      systemversion "latest"
 
     filter "system:not macosx"
         linkgroups "On"
@@ -309,6 +322,9 @@ function zefiros.setTestZPMDefaults( name, options )
     
     --filter "system:not macosx"
     --    linkgroups "On"
+
+    filter "action:vs2017"
+        systemversion "latest"
 
     filter "platforms:x86_64"
         targetdir "bin/x86_64/"
