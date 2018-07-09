@@ -38,7 +38,9 @@ function zefiros.testDefinition(name)
 
     filter "platforms:x86_64"
         architecture "x86_64"
-        
+
+    filter {}
+    
     startproject(name)
 
     project(name)
