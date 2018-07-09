@@ -581,7 +581,7 @@ zpm.newaction {
             os.executef("zpm gmake --skip-lock --verbose")   
 
             os.fexecutef("make %s %s", iif(os.ishost("linux"), "AR=gcc-ar", ""), zefiros.osxClang())
-            os.fexecutef("./bin/Test/%s", zefiros.env.project())
+            os.fexecutef("./bin/x86_64/Test/%s", zefiros.env.project())
         end
     end
 }
