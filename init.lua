@@ -780,7 +780,7 @@ function zefiros.onLoad()
 
     if os.getenv("TRAVIS") then
 
-        local gccVersion = os.getenv("GCC_VERSION")
+        local gccVersion = os.getenv("VERSION")
         if not gccVersion then
             gccVersion = "6"
         end
@@ -796,7 +796,7 @@ function zefiros.onLoad()
             os.execute("sudo apt-get -qq update -y")
         
             os.executef("sudo apt-get install g++-%s -y", gccVersion)
-            os.executef("sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-%s 60", gccVersion)
+            os.executef("sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-%s %s0", gccVersion, gccVersion)
             os.executef("sudo update-alternatives --config g++")
 
             if zefiros.env.architecture() == "x86" then
