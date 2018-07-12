@@ -4,7 +4,9 @@ matrix:
   include:
     - os: linux
       dist: trusty
-      env: VERSION=7
+      env: 
+        - VERSION=7
+        - BUILD_ARCHITECTURE=x86_64
     - os: osx
       osx_image: xcode9.2
       language: generic

@@ -572,7 +572,7 @@ zpm.newaction {
             
             os.executef("zpmd vs2015 --skip-lock --verbose")   
 
-            os.fexecutef("msbuild %s.sln /m /property:Configuration=Test /property:Platform=Win32", zefiros.env.project())
+            os.fexecutef("msbuild %s.sln /m /property:Configuration=Test /property:Platform=x64", zefiros.env.project())
             os.fexecutef("bin\\Test\\%s.exe", zefiros.env.project())
         else            
             os.fexecutef("g++ --version")
